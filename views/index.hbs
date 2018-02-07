@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <meta charset="utf-8">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
@@ -7,11 +8,30 @@
   <title>{{title}}</title>
   {{> styles}}
 </head>
-<body>
-  <div>
-    <a href="/login" title="Sign In">Sign In</a>
-    <a href="/signup" title="Sign Up">Sign Up</a>
-  </div>
+
+<body class="index clearfix">
+  <header id="header">
+    <h1 class="hide">{{header}}</h1>
+    <a class="logo logoImg" href="/"><span class="title">{{header}}</span></a>
+
+    <div class="title-bar" data-responsive-toggle="index-menu" data-hide-for="medium">
+      <button class="menu-icon" type="button" data-toggle></button>
+      <div class="title-bar-title">Menu</div>
+    </div>
+
+    <div id="index-menu" class="index clearfix addFloat">
+      <div class="top-bar-right">
+        <ul class="dropdown menu vertical medium-horizontal" data-dropdown-menu>
+          <li><a href="/login" title="Sign In">Sign In</a></li>
+          <li><a href="/signup" title="Sign Up">Sign Up</a></li>
+        </ul>
+      </div>
+    </div>
+  </header>
+  <div class="screenText clearfix">Stream. Explore. Sign up for free.</div>
+  <div class="bg fixed clearfix"></div>
   {{> footer}}
+  {{> scripts}}
 </body>
+
 </html>

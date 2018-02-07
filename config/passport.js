@@ -20,11 +20,12 @@ passport.deserializeUser((id, done) => {
 /**
  * Sign in using Email and Password.
  */
-passport.use(new LocalStrategy({ usernameField: 'email' }, (email, password, done) => {
+passport.use(new LocalStrategy({ usernameField: 'username' }, (username, password, done) => {
 
-  User.findOne({ where: {email: email.toLowerCase() }}).then(user => {
+  User.findOne({ where: {username: username }}).then(user => {
+
     if (!user) {
-      return done(null, false, { msg: `Email ${email} not found.` });
+      return done(null, false, { msg: `Username '${username}' not found.` });
     }
     user.comparePasswords(password, (err, isMatch) => {
       if (err) { return done(err); }

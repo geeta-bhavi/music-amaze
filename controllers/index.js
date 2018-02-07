@@ -2,9 +2,11 @@
  * GET /
  * Home page.
  */
+
 exports.index = (req, res) => {
   res.render('index.hbs', {
-    title: 'Music Amaze'
+    title: 'Music Amaze - Home',
+    header: 'Music Amaze'
   });
 }
 

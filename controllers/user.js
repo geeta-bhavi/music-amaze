@@ -8,7 +8,7 @@ const passport = require('passport');
  */
 exports.getLogin = (req, res) => {
   if (req.user) {
-    return res.redirect('/');
+    return res.redirect('/user/home');
   }
   res.render('user/login', {
     title: 'Login'
@@ -20,9 +20,8 @@ exports.getLogin = (req, res) => {
  * Sign in using email and password.
  */
 exports.postLogin = (req, res, next) => {
-  req.assert('email', 'Email is not valid').isEmail();
+  req.assert('username', 'Username is not valid').matches(/[a-zA-z.-_]/);
   req.assert('password', 'Password cannot be blank').notEmpty();
-  req.sanitize('email').normalizeEmail({ gmail_remove_dots: false });
 
   const errors = req.validationErrors();
   if (errors) {
@@ -31,7 +30,10 @@ exports.postLogin = (req, res, next) => {
 
   passport.authenticate('local', function(err, user, info) {
     if (err) { return next(err); }
-    if (!user) { return res.send('No such user'); }
+    if (!user) {
+      console.log('user.js'+info)
+      return res.status(400).send(info);
+    }
     req.logIn(user, function(err) {
       if (err) { return next(err); }
       return res.send(user);
@@ -54,7 +56,7 @@ exports.logout = (req, res) => {
  */
 exports.getSignup = (req, res) => {
   if (req.user) {
-    return res.redirect('/');
+    return res.redirect('/user/home');
   }
   res.render('user/signup', {
     title: 'Create Account'
@@ -66,8 +68,19 @@ exports.getSignup = (req, res) => {
  * User Home page.
  */
 exports.getUserHome = (req, res) => {
-  console.log(req.session);
+  res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
   res.render('user/home', {
-    title: 'User Home'
+    title: 'User Home',
+    userName: req.user.username
+  });
+};
+
+/**
+ * GET /user/editProfile
+ * User Home page.
+ */
+exports.getEditProfile = (req, res) => {
+  res.render('user/editProfile', {
+    title: 'Edit Profile'
   });
 };

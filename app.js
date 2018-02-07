@@ -15,6 +15,7 @@ const mysql = require('mysql');
 const dotenv = require('dotenv');
 const cookieParser = require('cookie-parser');
 
+
 /**
  * Load environment variables from .env file, where keys and passwords are configured.
  */
@@ -81,6 +82,11 @@ app.use(cookieSession({
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(passport.initialize());
 app.use(passport.session());
+// caching disabled for every route
+// app.use(function(req, res, next) {
+//   res.set('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
+//   next();
+// });
 
 /**
  * Primary app routes.
@@ -92,6 +98,7 @@ app.post('/login', userController.postLogin);
 app.get('/logout', userController.logout);
 app.get('/signup', userController.getSignup);
 app.get('/user/home', passportConfig.isAuthenticated, userController.getUserHome);
+app.get('/user/editProfile', passportConfig.isAuthenticated, userController.getEditProfile);
 //app.post('/signup', userController.postSignup);
 
 /**
