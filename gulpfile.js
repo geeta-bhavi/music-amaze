@@ -22,6 +22,7 @@ const wrap = require('gulp-wrap');
 
 // File Paths
 const DIST_PATH = 'public/dist';
+const LOGS_PATH = 'logs/*.log';
 const SCRIPTS_PATH = 'public/js/**/*.js';
 const  CSS_PATH = 'public/css/**/*.css';
 const IMAGES_PATH = 'public/assets/**/*.{png,jpeg,jpg,svg,gif}';
@@ -102,7 +103,8 @@ gulp.task('templates', function() {
 
 gulp.task('clean', function() {
   return del.sync([
-    DIST_PATH
+    DIST_PATH,
+    LOGS_PATH
   ])
 });
 

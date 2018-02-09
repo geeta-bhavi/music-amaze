@@ -6,8 +6,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{{title}}</title>
   {{> styles}}
+  <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
 </head>
 <body>
+  <header id="header">
+    <div><a class="logo logoImg" href="/"><span class="title">{{header}}</span></a></div>
+  </header>
+
+  <section class="error404">
+    <div id="errorPage">
+      <div class="title">404</div>
+      <p class="text">Something went wrong!</p>
+      <div class="buttonHome"><a href="/">Take me back home</a></div>
+    </div>
+  </section>
+
   {{> footer}}
   {{> scripts}}
 </body>

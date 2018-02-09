@@ -143,17 +143,42 @@ a:hover {
   padding-left: calc(100% / 8);
 }
 
-[type=text], [type=button], [type=submit], [type=reset],
-[type=password], [type=email] {
+.centerTextLarge {
+  padding-left: calc(100% / 16);
+}
+
+[type=text], [type=button], [type=submit], [type=reset], [type=password], [type=email] {
   border-radius: 5px;
 }
-div#error {
-    color:#FF4500;
-    width: 11rem;
-    margin: 0 auto;
+
+div#error, div#msg {
+  text-align: center;
+  padding: 5px;
 }
+
+.icon-error {
+  position: absolute;
+  right: 20px;
+  top: 41%;
+  color: #FF4500;
+}
+
+div#error, #emptyFields {
+  color: #FF4500;
+  padding-top: 10px;
+}
+
+div#msg {
+  color: #3adb76;
+}
+
 .inpPadding {
   padding: 0 15px;
+  position: relative;
+}
+
+label {
+  color: rgba(255, 255, 255, 0.5);
 }
 
 /**
@@ -347,6 +372,12 @@ footer .copy {
   }
 }
 
+@media only screen and (orientation: landscape) {
+  .imageCell  {
+    padding-top: 20px;
+  }
+}
+
 /**
 * common form styles
 */
@@ -389,3 +420,31 @@ section.commonForm .btns input {
   top: 50%;
   left: calc(50% / 2);
 } */
+
+/**
+* 404 page styles
+*/
+
+#errorPage {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#errorPage .title {
+  font-size: 5rem;
+  color: #FF851B;
+}
+
+#errorPage .buttonHome a {
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #ff851b;
+  display: inline-block;
+}
+
+#errorPage .buttonHome a:hover {
+  border: 1px solid #edaa54;
+  color: #edaa54;
+}

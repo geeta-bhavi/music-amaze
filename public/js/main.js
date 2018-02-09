@@ -9,7 +9,14 @@ $(function() {
    */
   $(window).on('load resize', handleLoad);
   $('#login').on('submit', handleLogin); /* on login */
-  $('#logout').on('click', handleLogout); /* on logout */
+  $('#editProfile').on('submit', handleUpdateProfile); /* update profile */
+  $('#confirmUser').on('submit', handleVerifyUser); /* verify user */
+  $('#forgotPassword').on('submit', handleUpdatePassword); /* verify user */
+  $('#signup').on('submit', handleSignUp); /* Sign up */
+  $('#reset').on('click', clearMessage);
+
+
+  var user = null;
 
 
   /* functions */
@@ -24,52 +31,212 @@ $(function() {
 
   function handleLogin(e) {
     e.preventDefault();
+    clearMessage();
 
-    clearError();
-
-    const name = $("#userName").val();
-    const pwd = $("#userPassword").val();
+    const name = $('#userName').val();
+    const pwd = $('#userPassword').val();
 
     if (name.length !== 0 && pwd.length !== 0) {
-      $.post('/login', {
-          username: name,
-          password: pwd
+
+      const userNameRegex = /^[a-zA-Z0-9._]{1,30}$/;
+      const nameVerifies = userNameRegex.test(name);
+
+      if (nameVerifies) {
+
+        $.post('/login', {
+            username: name,
+            password: pwd
+          })
+          .fail(function(data) {
+            console.log(data);
+            const responseText = data.responseJSON;
+            if (data.status === 400) {
+              showMessage(responseText[0].msg, 'error');
+            }
+            if (data.status === 401) {
+              showMessage(responseText.msg, 'error');
+            }
+          })
+          .done(function(data) {
+            console.log('Data Loaded: ' + JSON.stringify(data));
+            window.location.href = '/user/home';
+          });
+      }
+    } else {
+
+      if (name.length === 0) {
+        showErrorCircle('userName');
+        $('#emptyFields').removeClass('hide');
+      }
+      if (pwd.length == 0) {
+        showErrorCircle('userPassword');
+        $('#emptyFields').removeClass('hide');
+      }
+    }
+  }
+
+  function handleUpdateProfile(e) {
+    e.preventDefault();
+
+    clearMessage();
+
+    const username = $('#userName').val();
+    const email = $('#email').val();
+
+    if (username.length !== 0 && email.length !== 0) {
+
+      const pattern = /^[a-zA-Z0-9._]{1,30}$/;
+      const nameVerifies = pattern.test(username);
+      if (nameVerifies) {
+        $.post('/user/editProfile', {
+            username: username,
+            email: email
+          })
+          .fail(function(data) {
+            console.log(data);
+            if (data.status === 400) {
+              const responseText = data.responseJSON;
+              console.log(responseText);
+              if(responseText.length >= 1) {
+                showMessage(responseText[0].msg, 'error');
+              } else {
+                showMessage(responseText.msg, 'error');
+              }
+            }
+          })
+          .done(function(data) {
+            console.log('Data Loaded: ' + JSON.stringify(data));
+            showMessage(data.msg, 'msg');
+            $('#loginLink').removeClass('hide');
+            $('.btns').addClass('hide');
+          });
+      } else {
+        showErrorCircle('userName');
+        showMessage('Usernames can only use letters, numbers, underscores and periods.', 'error');
+
+      }
+    } else {
+      if (username.length === 0) {
+        showErrorCircle('userName');
+        $('#emptyFields').removeClass('hide');
+      }
+      if (email.length == 0) {
+        showErrorCircle('email');
+        $('#emptyFields').removeClass('hide');
+      }
+     }
+  }
+
+  function handleVerifyUser(e) {
+    e.preventDefault();
+
+    clearMessage();
+
+    const username = $('#username').val();
+
+    if (username.length !== 0) {
+
+      $.post('/verifyUser', {
+          username: username
         })
         .fail(function(data) {
           console.log(data);
-          if (data.status === 400) {
-            const responseText = JSON.parse(data.responseText);
-            if (responseText.length >= 1) {
-              showError(responseText[0].msg, "error");
-            } else {
-              showError(responseText.msg, "error");
-            }
+          if (data.status === 401) {
+            const responseText = data.responseJSON;
+            console.log(responseText);
+            showMessage(responseText.msg, 'error');
           }
         })
         .done(function(data) {
           console.log('Data Loaded: ' + JSON.stringify(data));
-          window.location.href = '/user/home';
+          $('#username').val('');
+          $('#forgotPassword').removeClass('hide');
+          $('#confirmUser').addClass('hide');
+          user = data;
         });
 
     } else {
-
-      if (name.length === 0) {
-        showError("Username field is empty", "error");
-      }
-      if (pwd.length == 0) {
-        showError("Password field is empty", "error");
+      if (username.length === 0) {
+        showErrorCircle('username');
+        $('#emptyFields').removeClass('hide');
       }
     }
-
   }
 
-  function handleLogout(e) {
+  function handleUpdatePassword(e) {
     e.preventDefault();
-    $.get('/logout')
-      .done(function(data) {
-        if (typeof data.redirect === 'string') {
-          window.location = data.redirect
+    clearMessage();
+
+    const newPwd = $('#newPassword').val();
+    const confirmPwd = $('#confirmPassword').val();
+
+    if (newPwd.length === 0) {
+      showErrorCircle('newPassword');
+      $('#emptyFields').removeClass('hide');
+    }
+
+    if (confirmPwd.length === 0) {
+      showErrorCircle('confirmPassword');
+      $('#emptyFields').removeClass('hide');
+    }
+
+    if (newPwd.length !== 0 && confirmPwd !== newPwd) {
+      showErrorCircle('confirmPassword');
+      $('#emptyFields').addClass('hide');
+      showMessage('Confirm password doesn\'t match with the new password', 'error');
+    }
+
+    if (newPwd.length !== 0 && confirmPwd.length !== 0 && newPwd === confirmPwd) {
+      $.post('/forgotPassword', {
+          newPassword: newPwd,
+          user: user
+        })
+        .fail(function(data) {
+          console.log(data);
+          if (data.status === 400) {
+            const responseText = data.responseJSON;
+            console.log(responseText);
+            showMessage(responseText.msg, 'error');
+          }
+        })
+        .done(function(data) {
+          console.log('Data Loaded: ' + JSON.stringify(data));
+          $('#forgotPassword').reset();
+          showMessage(data.msg, 'msg');
+          $('.btns').addClass('hide');
+          $('#loginLink').removeClass('hide');
+        });
+    }
+  }
+
+  function handleSignUp(e) {
+    e.preventDefault();
+    clearMessage();
+
+    const error = 'Usernames can only use letters, numbers, underscores and periods.';
+    const name = 'OLIVE';
+    const pwd = 'OLIVE';
+    const email = 'geeta@gmail.com';
+
+    $.post('/signup', {
+        username: name,
+        password: pwd,
+        email: email
+      })
+      .fail(function(data) {
+        console.log(data);
+        if (data.status === 400) {
+          const responseText = data.responseJSON;
+          console.log(responseText);
+          showMessage(responseText.msg, 'error');
         }
+      })
+      .done(function(data) {
+        $('#signup').reset();
+        console.log('Data Loaded: ' + JSON.stringify(data));
+        showMessage(data.msg, 'msg');
+        $('.btns').addClass('hide');
+        $('#loginLink').removeClass('hide');
       });
   }
 
@@ -77,17 +244,26 @@ $(function() {
    * Utility functions
    */
 
-  function clearError() {
-    $("#error").empty();
+  function clearMessage() {
+    $('#error').empty();
+    $('#msg').empty();
+    $('#emptyFields').addClass('hide');
+    $('.icon-error').remove();
   }
 
-  function showError(errorTxt, errorDiv) {
-    var ulEle = $("#errorCont");
+  function showMessage(msgTxt, msgDiv) {
+    var ulEle = $('#msgcont');
     if (ulEle.length === 0) {
-      ulEle = $("<ul id='errorCont'></ul>");
+      ulEle = $('<ul id=\'msgcont\'></ul>');
     }
-    ulEle.append("<li>" + errorTxt + "</li>");
-    $("#" + errorDiv).html(ulEle);
+    ulEle.append('<li>' + msgTxt + '</li>');
+    $('#' + msgDiv).html(ulEle);
+  }
+
+  function showErrorCircle(circleInp) {
+    const inpEle = $('#'+circleInp);
+    const spanEle = $('<span class=\'icon-error\'><i class=\'fi-x-circle\'></i></span>');
+    inpEle.after(spanEle);
   }
 
 

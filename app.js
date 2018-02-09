@@ -96,10 +96,14 @@ app.get('/error', indexController.error);
 app.get('/login', userController.getLogin);
 app.post('/login', userController.postLogin);
 app.get('/logout', userController.logout);
+app.get('/forgotPassword', userController.getForgot);
+app.post('/forgotPassword', userController.postForgot);
+app.post('/verifyUser', userController.postVerifyUser)
 app.get('/signup', userController.getSignup);
+app.post('/signup', userController.postSignup);
 app.get('/user/home', passportConfig.isAuthenticated, userController.getUserHome);
 app.get('/user/editProfile', passportConfig.isAuthenticated, userController.getEditProfile);
-//app.post('/signup', userController.postSignup);
+app.post('/user/editProfile', passportConfig.isAuthenticated, userController.postEditProfile);
 
 /**
  * Error Handler.

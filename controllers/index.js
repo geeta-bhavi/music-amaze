@@ -12,6 +12,7 @@ exports.index = (req, res) => {
 
 exports.error = (req, res) => {
   res.render('404.hbs', {
-    title: 'Error'
+    title: 'Error',
+    header: 'Music Amaze'
   });
 }

@@ -18,7 +18,7 @@ passport.deserializeUser((id, done) => {
 });
 
 /**
- * Sign in using Email and Password.
+ * Sign in using Username and Password.
  */
 passport.use(new LocalStrategy({ usernameField: 'username' }, (username, password, done) => {
 
