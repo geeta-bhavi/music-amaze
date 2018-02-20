@@ -35,9 +35,25 @@ html {
 body {
   font-family: Arial, Georgia, serif;
   background: #282b34;
-  color: rgba(255, 255, 255, 0.5);
+  color: #fff;
+  /*hsla(0,0%,100%,.6);/*rgba(255, 255, 255, 0.5);*/
   margin: 0 auto;
   position: relative;
+  z-index: 1;
+}
+
+div.bodyBg {
+  background-image: linear-gradient(rgb(105, 71, 48), rgb(10, 7, 4) 100%);
+  background-size: cover;
+  width: 100%;
+  height: 100vh;
+  background-size: cover;
+  background-repeat: no-repeat;
+  left: 0;
+  top: 0;
+  position: fixed;
+  will-change: transform;
+  z-index: -1;
 }
 
 dl, menu, ol, ul {
@@ -90,7 +106,7 @@ html {
 }
 
 a {
-  color: rgba(255, 255, 255, 0.5);
+  color: #fff;
 }
 
 a:hover {
@@ -98,21 +114,21 @@ a:hover {
 }
 
 .no-touch a:hover, .no-touch .button.hollow.secondary:hover, .no-touch .button.hollow.secondary:focus {
-  color: #FF851B;
+  color: hsla(0, 0%, 100%, .6);
 }
 
 .button.primary {
-  background-color: #FF851B;
+  background-color: hsla(0, 0%, 65%, .6);
 }
 
 .button.primary:hover, .button.primary:focus {
-  background-color: #edaa54;
+  background-color: hsla(0, 0%, 85%, .6);
 }
 
 .touch .button.secondary:hover, .touch .button.secondary:focus {
   background: none;
   color: inherit;
-  border-color: #767676;
+  border-color: hsla(0, 0%, 65%, .6);
 }
 
 .button.hollow.secondary {
@@ -151,6 +167,14 @@ a:hover {
   border-radius: 5px;
 }
 
+.floatRight {
+  float: right;
+}
+
+.floatLeft {
+  float: left;
+}
+
 div#error, div#msg {
   text-align: center;
   padding: 5px;
@@ -178,7 +202,7 @@ div#msg {
 }
 
 label {
-  color: rgba(255, 255, 255, 0.5);
+  color: #fff;
 }
 
 /**
@@ -187,8 +211,16 @@ label {
 
 header {
   background-color: rgba(255, 255, 255, 0.175);
-  padding: 1rem;
   font-size: 1.6rem;
+  position: relative;
+}
+
+header div.cell {
+  padding: 1rem 1rem 0;
+}
+
+header.withoutTitle {
+  padding: 1rem;
 }
 
 header a {
@@ -241,6 +273,12 @@ header a {
   #header .title {
     margin: 0 0 0 114px;
     font-size: 1.1rem;
+  }
+}
+
+@media only screen and (orientation: landscape) {
+  #header .logoImg {
+    height: 50px;
   }
 }
 
@@ -304,7 +342,7 @@ body.index #header {
 }
 
 .bg.fixed {
-  position: fixed;
+  /* position: fixed; */
   width: 100vw;
   height: 100vh;
 }
@@ -372,12 +410,6 @@ footer .copy {
   }
 }
 
-@media only screen and (orientation: landscape) {
-  .imageCell  {
-    padding-top: 20px;
-  }
-}
-
 /**
 * common form styles
 */
@@ -387,7 +419,9 @@ section.commonForm {
 }
 
 section.commonForm .btns {
-  margin: 0 calc((100% / 2) - 80px);
+  /* margin: 0 calc((100% / 2) - 80px); */
+  width: 11rem;
+  margin: 0 auto;
 }
 
 section.commonForm .btns input {
@@ -447,4 +481,158 @@ section.commonForm .btns input {
 #errorPage .buttonHome a:hover {
   border: 1px solid #edaa54;
   color: #edaa54;
+}
+
+/**
+* Music home page
+*/
+
+header.noBg {
+  background: none;
+  border-bottom: 1px solid hsla(0, 0%, 100%, .25);
+}
+
+.user-name {
+  font-size: 1rem;
+  font-weight: bold;
+  display: inline-block;
+}
+
+.userMenu {
+  position: absolute;
+  right: 2%;
+  top: 0;
+  height: 100%;
+}
+
+.fi-torso {
+  /* color: #FF851B; */
+}
+
+.menuDiv {
+  position: absolute;
+  right: 14px;
+  top: 40%;
+  cursor: pointer;
+}
+
+.menuIcon {
+  display: block;
+  width: 0;
+  height: 0;
+  border: inset 6px;
+  content: '';
+  border-bottom-width: 0;
+  border-top-style: solid;
+  border-color: hsla(0, 0%, 100%, .6) transparent transparent;
+  position: absolute;
+  top: 62%;
+  right: -15px;
+  left: auto;
+  margin-top: -6px;
+}
+
+/**
+* Top Trending
+*/
+
+section.topTrend {
+  padding: 20px 0;
+  text-align: center;
+}
+
+section.topTrend h3 {
+  width: 100%;
+  padding: 20px 0;
+}
+
+ul.topTrend {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+ul.topTrend li {
+  flex: 1 0 150px;
+  padding: 10px;
+}
+
+ul.topTrend li a {
+  display: inline-block;
+  position: relative;
+}
+
+ul.topTrend li a div.icon {
+  position: absolute;
+  top: 35%;
+  bottom: 35%;
+  left: 35%;
+  right: 35%;
+}
+
+ul.topTrend li a img {
+  box-shadow: 0 0 20px rgba(0, 0, 0, .3);
+  background: #282828;
+  width: 140px;
+  height: 140px;
+}
+
+ul.topTrend li a span {
+  display: block;
+  text-transform: capitalize;
+  width: 140px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 0.9rem;
+  font-weight: bold;
+  padding: 5px 0 0 0;
+  text-align: center;
+}
+
+@media only screen and (orientation: landscape) {
+  ul.topTrend li {
+    flex: 1 0 200px;
+  }
+}
+
+.cover-art-playback svg {
+  transform: scale(.5);
+  width: 100%;
+  height: 100%;
+}
+
+.cover-art-playback {
+  transition: none 33ms cubic-bezier(.3, 0, .7, 1);
+  transition-property: all;
+  background-color: #282828;
+  display: none;
+  position: absolute;
+  z-index: 3;
+  width: 62px;
+  height: 62px;
+  margin-left: -31px;
+  margin-top: -31px;
+  top: 50%;
+  left: 50%;
+  color: #fff;
+  border: 0;
+  border-radius: 500px;
+  box-sizing: content-box;
+  outline: none;
+  box-shadow: inset 0 0 0 1px #a0a0a0;
+}
+ul.topTrend li a:hover .cover-art-playback {
+  display: block;
+  cursor: pointer;
+}
+
+ul.topTrend li a:hover .cover-art-playback::after {
+  content: "";
+  position: absolute;
+  top:0;
+  left:0;
+  right:0;
+  bottom:0;
+  border-radius: 500px;
+  box-shadow: inset 0 0 0 1px #a0a0a0;
 }

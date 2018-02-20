@@ -15,7 +15,6 @@ const mysql = require('mysql');
 const dotenv = require('dotenv');
 const cookieParser = require('cookie-parser');
 
-
 /**
  * Load environment variables from .env file, where keys and passwords are configured.
  */
@@ -67,7 +66,7 @@ const mysqlPool = mysql.createPool({
 /**
  * Express configuration.
  */
-app.set('host', 'localhost');
+app.set('host', process.env.HOST || 'localhost');
 app.set('port', process.env.PORT || 3000);
 app.set('view engine', 'hbs');
 app.use(logger('combined', {stream: logfile}));
@@ -114,8 +113,25 @@ if (app.get('env') === 'development') {
 
 app.use(function (req, res, next) {
   res.status(404).redirect('/error')
-})
+});
 
+hbs.registerHelper('ifCond', (v1, v2, options) => {
+  if(v1 === v2) {
+    return options.fn(this);
+  }
+  return options.inverse(this);
+});
+
+hbs.registerHelper('list', function(context, options) {
+  var ret = "";
+
+  for(var i=0, j=context.length; i<j; i++) {
+    console.log(context[i])
+    ret = ret + options.fn(context[i]);
+  }
+
+  return ret ;
+});
 /**
  * Start Express server.
  */

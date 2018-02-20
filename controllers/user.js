@@ -1,6 +1,10 @@
 const passport = require('passport');
-const User = require('../models/User');
 const Sequelize = require('sequelize');
+
+const User = require('../models/User');
+const helperTrack = require('../helpers/track');
+
+
 
 
 /**
@@ -12,7 +16,8 @@ exports.getLogin = (req, res) => {
     return res.redirect('/user/home');
   }
   res.render('user/login', {
-    title: 'Login'
+    title: 'Login - Music Amaze',
+    header: 'Login'
   });
 };
 
@@ -27,12 +32,9 @@ exports.postLogin = (req, res, next) => {
   if (errors) {
     return res.status(400).send(errors);
   }
-
   passport.authenticate('local', function(err, user, info) {
     if (err) {
-      return res.status(401).send({
-        msg: err
-      });
+      return res.status(401).send({msg: err});
     }
     if (!user) {
       return res.status(401).send(info);
@@ -41,6 +43,7 @@ exports.postLogin = (req, res, next) => {
       if (err) {
         return next(err);
       }
+
       return res.send(user);
     });
   })(req, res, next);
@@ -64,7 +67,8 @@ exports.getSignup = (req, res) => {
     return res.redirect('/user/home');
   }
   res.render('user/signup', {
-    title: 'Create Account'
+    title: 'Create Account - Music Amaze',
+    header: 'Create Account'
   });
 };
 
@@ -73,11 +77,17 @@ exports.getSignup = (req, res) => {
  * User Home page.
  */
 exports.getUserHome = (req, res) => {
-  res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
-  res.render('user/home', {
-    title: 'User Home',
-    userName: req.user.username
-  });
+  var topTrendingTracks = helperTrack.getTopTrending();
+  topTrendingTracks.then((topTrending) => {
+    res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
+    res.render('user/home', {
+      title: 'Music Home - Music Amaze',
+      userName: req.user.username,
+      topTrendingTracks: topTrending
+    });
+ });
+
+
 };
 
 /**
@@ -86,7 +96,8 @@ exports.getUserHome = (req, res) => {
  */
 exports.getEditProfile = (req, res) => {
   res.render('user/editProfile', {
-    title: 'Edit Profile',
+    title: 'Edit Profile - Music Amaze',
+    header: 'Edit Profile',
     userName: req.user.username,
     email: req.user.email
   });
@@ -166,7 +177,8 @@ exports.getForgot = (req, res) => {
   }
   res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
   res.render('user/forgotPassword', {
-    title: 'Reset Password'
+    title: 'Reset Password - Music Amaze',
+    header: 'Reset Password'
   });
 };
 

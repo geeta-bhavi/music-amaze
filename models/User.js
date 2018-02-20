@@ -78,16 +78,15 @@ function comparePasswords(userpassword, callback) {
 
 // Hashes the password for a user object.
 function hashPassword(user, options) {
-
   if (!user.changed('password')) {
     return;
   }
 
   return new Promise(function(resolve, reject) {
     bcrypt.genSalt(saltRounds, (err, salt) => {
-      if (err) {
-        reject(err);
-      }
+      
+      if (err) { reject(err); }
+
       bcrypt.hash(user.password, salt, (err, hash) => {
         if (err) {
           reject(err);
@@ -96,8 +95,6 @@ function hashPassword(user, options) {
       });
     })
   }).then(function(hash) {
-
-    console.log('has', hash);
     user.password = hash;
   });
 
