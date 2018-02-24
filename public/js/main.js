@@ -4,6 +4,14 @@ $(function() {
    */
   $(document).foundation();
 
+  $('.screenText').slick({
+    dots: true,
+    infinite: true,
+    speed: 500,
+    fade: true,
+    cssEase: 'linear'
+  });
+
   /**
    * Register functions
    */
@@ -13,7 +21,13 @@ $(function() {
   $('#confirmUser').on('submit', handleVerifyUser); /* verify user */
   $('#forgotPassword').on('submit', handleUpdatePassword); /* post update password */
   $('#signup').on('submit', handleSignUp); /* Sign up */
-  $('#reset').on('click', clearMessage);
+  $('#reset').on('click', clearMessage); /* Clear messages on click of reset */
+  $('#changePassword').on('submit', handleChangePassword); /* post change password */
+  $('#searchIcon').on('click', displaySearchBar);
+  $('.js-search-close').on('click', hideSearchBar);
+  $('.menuDiv').on('click', showUserMenuD);
+  $(document).on('click', '.menuMode', showUserMenu);
+  $(document).on('click', '.close-icon', hideUserMenu);
 
 
   var user = null;
@@ -26,6 +40,17 @@ $(function() {
       $('#index-menu').removeClass('addFloat');
     } else {
       $('#index-menu').addClass('addFloat');
+    }
+
+    var width = $(window).width();
+    if (width < 400) {
+      $('.menuDiv').addClass('menuMode');
+      $('#user-menu').removeClass('show');
+    } else {
+      $('#user-menu').removeClass('show');
+      $('#user-menu').css('width', '180px');
+      $('.close-icon').remove();
+      $('.menuDiv').removeClass('menuMode');
     }
   }
 
@@ -56,6 +81,10 @@ $(function() {
           .done(function(data) {
             window.location.href = '/user/home';
           });
+      } else {
+        showErrorCircle('userName');
+        showMessage('Usernames can only use letters, numbers, underscores and periods.', 'error');
+
       }
     } else {
 
@@ -194,6 +223,52 @@ $(function() {
     }
   }
 
+  function handleChangePassword(e) {
+    e.preventDefault();
+    clearMessage();
+
+    const oldPwd = $('#oldPassword').val();
+    const newPwd = $('#newPassword').val();
+    const confirmPwd = $('#confirmPassword').val();
+
+    if (newPwd.length === 0) {
+      showErrorCircle('newPassword');
+      $('#emptyFields').removeClass('hide');
+    }
+
+    if (confirmPwd.length === 0) {
+      showErrorCircle('confirmPassword');
+      $('#emptyFields').removeClass('hide');
+    }
+
+    if (newPwd.length !== 0 && confirmPwd !== newPwd) {
+      showErrorCircle('confirmPassword');
+      $('#emptyFields').addClass('hide');
+      showMessage('Confirm password doesn\'t match with the new password', 'error');
+    }
+
+    if (newPwd.length !== 0 && confirmPwd.length !== 0 && newPwd === confirmPwd) {
+      $.post('/user/changePassword', {
+          oldPassword: oldPwd,
+          newPassword: newPwd
+        })
+        .fail(function(data) {
+          if (data.status === 400) {
+            const responseText = data.responseJSON;
+            showMessage(responseText.msg, 'error');
+          }
+        })
+        .done(function(data) {
+          showMessage(data.msg, 'msg');
+          $('.btns').addClass('hide');
+          $('#loginLink').removeClass('hide');
+        });
+    }
+
+
+
+  }
+
   function handleSignUp(e) {
     e.preventDefault();
     clearMessage();
@@ -202,10 +277,18 @@ $(function() {
     const email = $("#userEmail").val();
     const pwd = $("#userPassword").val();
     const confirmpwd = $("#confirmPassword").val();
+    const userNameRegex = /^[a-zA-Z0-9._]{1,30}$/;
+    const nameVerifies = userNameRegex.test(name);
+
 
     if (name.length === 0) {
       showErrorCircle('userName');
       $('#emptyFields').removeClass('hide');
+    }
+
+    if (!nameVerifies) {
+      showErrorCircle('userName');
+      showMessage('Usernames can only use letters, numbers, underscores and periods.', 'error');
     }
 
     if (email.length === 0) {
@@ -256,6 +339,53 @@ $(function() {
         });
     }
   }
+
+  function displaySearchBar(e) {
+    e.preventDefault();
+
+    $('#headerDiv').removeClass('show').addClass('hide');
+    $('#search').addClass('show');
+  }
+
+  function hideSearchBar(e) {
+    e.preventDefault();
+
+    $('#headerDiv').removeClass('hide').addClass('show');
+    $('#search').removeClass('show');
+  }
+
+  function showUserMenuD(e) {
+    e.preventDefault();
+    const userIcon = $('#user-menu');
+    if (!userIcon.hasClass('show')) {
+      $('#user-menu').addClass('show');
+    } else {
+      $('#user-menu').removeClass('show');
+    }
+
+  }
+
+  function showUserMenu(e) {
+    e.preventDefault();
+    const userIcon = $('#user-menu');
+    $('#user-menu').addClass('show');
+    userIcon.css('width', '250px');
+    userIcon.prepend('<div class="close-icon"><i class="fi-x"></i></div>');
+  }
+
+  function hideUserMenu(e) {
+    e.preventDefault();
+    const userIcon = $('#user-menu');
+    $('#user-menu').removeClass('show');
+    userIcon.css('width', '180px');
+    $('.close-icon').remove();
+
+
+  }
+
+
+
+
 
   /**
    * Utility functions

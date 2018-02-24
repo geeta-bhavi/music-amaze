@@ -5,8 +5,10 @@
       {{#each topTrendingTracks}}
         <li id="{{TRACK_ID}}">
           <a title="{{TRACK_NAME}}" href="#">
-            <img onerror="this.src='/dist/assets/error.png'" src="/dist/assets/cover/{{TRACK_ID}}.jpg" alt="{{ALBUM_NAME}}">
+            <img onerror="this.src='/dist/assets/error.png'" src="/assets/cover/{{ALBUM_ID}}.jpg" alt="{{ALBUM_NAME}}">
+            <!-- <div class="imgOverlay"></div> -->
             <span>{{TRACK_NAME}}</span>
+            <div class="hov"></div>
             <button class="cover-art-playback"><svg class="icon-play" viewBox="0 0 85 100"><path fill="currentColor" d="M81 44.6c5 3 5 7.8 0 10.8L9 98.7c-5 3-9 .7-9-5V6.3c0-5.7 4-8 9-5l72 43.3z"><title>PLAY</title></path></svg></button>
           </a>
         </li>

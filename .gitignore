@@ -36,5 +36,7 @@
 ehthumbs.db
 Thumbs.db
 /target/
+db/
+db/musicamaze_db.sql
 /public/dist/
 /node_modules/

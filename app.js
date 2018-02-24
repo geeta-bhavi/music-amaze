@@ -24,7 +24,18 @@ dotenv.load({ path: '.env.musicamaze' });
 * Other configurations.
 */
 const logfile = fs.createWriteStream(path.join(__dirname, '/logs/server.log'), {flags: 'a'});
-hbs.registerPartials(path.join(__dirname, '/views/partials'));
+//hbs.registerPartials(path.join(__dirname, '/views/partials'));
+var partialsDir = __dirname + '/views/partials';
+var filenames = fs.readdirSync(partialsDir);
+filenames.forEach(function (filename) {
+  var matches = /^([^.]+).hbs$/.exec(filename);
+  if (!matches) {
+    return;
+  }
+  var name = matches[1];
+  var template = fs.readFileSync(partialsDir + '/' + filename, 'utf8');
+  hbs.registerPartial(name, template);
+});
 
 /**
  * Controllers (route handlers).
@@ -103,6 +114,8 @@ app.post('/signup', userController.postSignup);
 app.get('/user/home', passportConfig.isAuthenticated, userController.getUserHome);
 app.get('/user/editProfile', passportConfig.isAuthenticated, userController.getEditProfile);
 app.post('/user/editProfile', passportConfig.isAuthenticated, userController.postEditProfile);
+app.get('/user/changePassword', passportConfig.isAuthenticated, userController.getChangePassword);
+app.post('/user/changePassword', passportConfig.isAuthenticated, userController.postChangePassword);
 
 /**
  * Error Handler.
@@ -115,23 +128,6 @@ app.use(function (req, res, next) {
   res.status(404).redirect('/error')
 });
 
-hbs.registerHelper('ifCond', (v1, v2, options) => {
-  if(v1 === v2) {
-    return options.fn(this);
-  }
-  return options.inverse(this);
-});
-
-hbs.registerHelper('list', function(context, options) {
-  var ret = "";
-
-  for(var i=0, j=context.length; i<j; i++) {
-    console.log(context[i])
-    ret = ret + options.fn(context[i]);
-  }
-
-  return ret ;
-});
 /**
  * Start Express server.
  */

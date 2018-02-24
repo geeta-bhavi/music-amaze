@@ -2,7 +2,7 @@ const passport = require('passport');
 const Sequelize = require('sequelize');
 
 const User = require('../models/User');
-const helperTrack = require('../helpers/track');
+const track = require('../controllers/track');
 
 
 
@@ -77,7 +77,7 @@ exports.getSignup = (req, res) => {
  * User Home page.
  */
 exports.getUserHome = (req, res) => {
-  var topTrendingTracks = helperTrack.getTopTrending();
+  var topTrendingTracks = track.getTopTrending();
   topTrendingTracks.then((topTrending) => {
     res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
     res.render('user/home', {
@@ -280,4 +280,51 @@ exports.postSignup = (req, res, next) => {
           });
       }
   });
+}
+
+/**
+ * GET /user/changePassword
+ * Change Password page.
+ */
+exports.getChangePassword = (req, res) => {
+  res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
+  res.render('user/changePassword', {
+    title: 'Change Password - Music Amaze',
+    header: 'Change Password'
+  });
+};
+
+/**
+ * POST /user/changePassword
+ */
+exports.postChangePassword = (req, res, next) => {
+
+  const oldPwd = req.body.oldPassword;
+  const newPwd = req.body.newPassword;
+  const curUserId = req.user.userId;
+
+    User.findById(curUserId).then(retUser => {
+      if (retUser !== null) {
+        retUser.comparePasswords(oldPwd, (err, isMatch) => {
+          if (isMatch) {
+            retUser.password = newPwd;
+            retUser
+              .update({
+                password: newPwd
+              }, {
+                where: {
+                  userId: curUserId
+                }
+              }).then(user => {
+                return res.send({
+                  msg: 'Password Updated!'
+                });
+              });
+          } else {
+            return res.status(400).send({msg: 'Old Password is incorrect'});
+          }
+        });
+      }
+    });
+
 }

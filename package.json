@@ -4,7 +4,8 @@
   "description": "Music Streaming Website",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "gulp watch",
+    "test": "mocha **/*.test.js"
   },
   "author": "Geeta Bhavi, Swathi Reddy",
   "license": "ISC",
@@ -46,5 +47,11 @@
     "passport-local": "^1.0.0",
     "request": "^2.83.0",
     "sequelize": "^4.32.2"
+  },
+  "devDependencies": {
+    "expect": "^1.20.2",
+    "mocha": "^5.0.1",
+    "sinon": "^4.3.0",
+    "supertest": "^3.0.0"
   }
 }
