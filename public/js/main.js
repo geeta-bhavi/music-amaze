@@ -286,7 +286,7 @@ $(function() {
       $('#emptyFields').removeClass('hide');
     }
 
-    if (!nameVerifies) {
+    if (!nameVerifies && name.length !== 0) {
       showErrorCircle('userName');
       showMessage('Usernames can only use letters, numbers, underscores and periods.', 'error');
     }
@@ -309,14 +309,18 @@ $(function() {
     if (pwd.length !== 0 && confirmpwd.length !== 0 && confirmpwd !== pwd) {
       showErrorCircle('confirmPassword');
       $('#emptyFields').addClass('hide');
-      showError('Confirm password doesn\'t match with password', 'error');
+      showMessage('Confirm password doesn\'t match with password', 'error');
+      if (email.length === 0 || name.length === 0) {
+        $('#emptyFields').removeClass('hide');
+      }
     }
 
     // const error = 'Usernames can only use letters, numbers, underscores and periods.';
     // const name = 'OLIVE';
     // const pwd = 'OLIVE';
     // const email = 'geeta@gmail.com';
-    if (name.length !== 0 && pwd.length !== 0 && confirmpwd.length !== 0 && email.length !== 0) {
+    if (name.length !== 0 && pwd.length !== 0 && confirmpwd.length !== 0
+      && email.length !== 0 && pwd === confirmpwd && nameVerifies) {
       $.post('/signup', {
           username: name,
           password: pwd,

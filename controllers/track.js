@@ -5,7 +5,6 @@ const Album = require('../models/Album');
 
 const Op = Sequelize.Op;
 
-
 exports.getTopTrending = () => {
 
   return new Promise(function(resolve, reject) {

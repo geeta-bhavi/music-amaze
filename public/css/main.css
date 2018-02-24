@@ -301,6 +301,7 @@ header a {
   position: absolute;
   right: 10px;
   top: 50px;
+  z-index: 3;
 }
 
 /**
@@ -475,7 +476,7 @@ section.commonForm {
 
 section.commonForm .btns {
   /* margin: 0 calc((100% / 2) - 80px); */
-  width: 11rem;
+  width: 12rem;
   margin: 0 auto;
 }
 
