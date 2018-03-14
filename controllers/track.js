@@ -1,10 +1,19 @@
 const Sequelize = require('sequelize');
+const crypto = require('crypto');
+const parseString = require('xml2js').parseString;
+const request = require("request");
 
 const Track = require('../models/Track');
 const Album = require('../models/Album');
+const Artist = require('../models/Artist');
 
 const Op = Sequelize.Op;
+var album = {};
 
+
+/**
+ * getTopTrending method
+ */
 exports.getTopTrending = () => {
 
   return new Promise(function(resolve, reject) {
@@ -44,4 +53,252 @@ exports.getTopTrending = () => {
       resolve(data);
     })
   });
+}
+
+/**
+* getArtistTracks method
+*/
+
+const getArtistTracks = (artistId, auth) => {
+  return new Promise((resolve, reject) => {
+    Track.findAll({
+      attributes: ['TRACK_ID', 'TRACK_NAME', 'TRACK_TIME', 'TRACK_SOURCE', 'ARTIST_ID', 'ALBUM_ID'],
+      where: {
+        ARTIST_ID: artistId
+      },
+      include: [{
+          model: Album,
+          attributes: ['ALBUM_NAME']
+        },
+        {
+          model: Artist,
+          attributes: ['STAGE_NAME']
+        }
+      ]
+    }).then(results => {
+      const trackId = results[0].dataValues.TRACK_ID;
+      album.albumId = results[0].dataValues.ALBUM_ID;
+      var data = results.map((r) => {
+        var obj = r.dataValues;
+        obj.trackTime = fancyTimeFormat(r.dataValues.TRACK_TIME);
+        obj.albumName = r.Album.dataValues.ALBUM_NAME;
+        obj.artistName = r.Artist.dataValues.STAGE_NAME;
+        var trackSrc = r.dataValues.TRACK_SOURCE;
+
+        /* replace old auth with new */
+        trackSrc = trackSrc.replace('a538266a2ea125ce06cf34fff192f47c', auth);
+        r.dataValues.TRACK_SOURCE = trackSrc;
+        /* pass highlight parameters to the selected track */
+        if (parseInt(r.dataValues.TRACK_ID) === parseInt(trackId)) {
+          album.trackSource = r.dataValues.TRACK_SOURCE;
+          obj.highlight = 'highlight';
+          obj.soundIcon = 'fi-sound';
+        }
+        return obj;
+      });
+      resolve(data);
+
+    });
+
+  });
+}
+
+/**
+ * getTracks method
+ */
+
+const getTracks = (albumId, trackId, auth) => {
+  return new Promise((resolve, reject) => {
+    Track.findAll({
+      attributes: ['TRACK_ID', 'TRACK_NAME', 'TRACK_TIME', 'TRACK_SOURCE', 'GENRE', 'ARTIST_ID', 'ALBUM_ID', 'TRACK_NUM'],
+      where: {
+        ALBUM_ID: albumId
+      },
+      include: [{
+          model: Album,
+          attributes: ['ALBUM_NAME', 'YEAR_RELEASED']
+        },
+        {
+          model: Artist,
+          attributes: ['STAGE_NAME']
+        }
+      ],
+      order: [
+        ['TRACK_NUM', 'ASC']
+      ],
+    }).then(results => {
+      if(trackId === undefined) {
+        trackId = results[0].dataValues.TRACK_ID;
+      }
+      var data = results.map((r) => {
+        var obj = r.dataValues;
+        album.albumName = r.Album.dataValues.ALBUM_NAME;
+        album.albumId = r.dataValues.ALBUM_ID;
+        obj.trackTime = fancyTimeFormat(r.dataValues.TRACK_TIME);
+        album.artistName = r.Artist.dataValues.STAGE_NAME;
+        album.genre = r.GENRE;
+        album.yearReleased = r.Album.dataValues.YEAR_RELEASED;
+        album.separator = '';
+        var trackSrc = r.dataValues.TRACK_SOURCE;
+
+        /* replace old auth with new */
+        trackSrc = trackSrc.replace('a538266a2ea125ce06cf34fff192f47c', auth);
+        r.dataValues.TRACK_SOURCE = trackSrc;
+        /* pass highlight parameters to the selected track */
+        if (parseInt(r.dataValues.TRACK_ID) === parseInt(trackId)) {
+          album.trackSource = r.dataValues.TRACK_SOURCE;
+          obj.highlight = 'highlight';
+          obj.soundIcon = 'fi-sound';
+        }
+        if (album.genre === null) {
+          album.genre = '';
+        }
+        if (album.yearReleased === 0) {
+          album.yearReleased = '';
+        }
+        if ((album.genre && album.yearReleased) !== '') {
+          album.separator = ' .';
+        }
+        return obj;
+      });
+      resolve(data);
+    });
+
+  });
+}
+
+/**
+ * fancyTimeFormat method
+ */
+function fancyTimeFormat(time) {
+  // Hours, minutes and seconds
+  var mins = ~~((time % 3600) / 60);
+  var secs = time % 60;
+
+  // Output like "1:01" or "4:03:59" or "123:03:59"
+  var ret = '';
+  ret += '' + (mins < 10 ? '0' : '');
+  ret += '' + mins + ':' + (secs < 10 ? '0' : '');
+  ret += '' + secs;
+  return ret;
+}
+
+/**
+ * Get Auth method
+ */
+const getAuth = () => {
+  return new Promise((resolve, reject) => {
+
+    const time = ~~(new Date() / 1000);
+    const hash = crypto.createHash('sha256').update('testpassword').digest('hex');
+    const passphrase = crypto.createHash('sha256').update(time + hash).digest('hex');
+
+    const url =
+      'http://music.lannysport.net/server/xml.server.php?action=handshake&auth=' + passphrase + '&timestamp=' + time + '&version=350001&user=vaibhav';
+    request.get(url, (error, response, body) => {
+      if(error) {
+        reject('Unable to connect to lannysport server');
+      } else {
+        parseString(body, function(err, result) {
+          if(err) {
+            reject('Unable to get authentication');
+          }
+          resolve({
+            auth: result.root.auth[0],
+            maxAge: ~~(new Date(result.root.session_expire[0]) / 1000)
+          });
+        });
+      }
+
+    });
+  });
+}
+
+
+/**
+ * GET /play/album/:albumId/track/:id
+ *  GET /play/album/:albumId
+ * Get tracks for Album
+ */
+
+exports.getAlbumTracks = (req, res, next) => {
+  const trackId = req.params.trackId;
+  const albumId = req.params.albumId;
+
+  var auth = getAuth();
+  auth.then((authObj) => {
+    var cookie = req.cookies.auth;
+    console.log(req.cookies.auth);
+    if (cookie === undefined) {
+      res.cookie('auth', authObj.auth, {
+        maxAge: authObj.maxAge,
+        httpOnly: true
+      });
+    } else {
+      console.log('cookie exists', cookie);
+    }
+    var tracks = getTracks(albumId, trackId, authObj.auth);
+    tracks.then((albumTracks) => {
+      res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
+      res.render('music/play', {
+        displaySearch: 'hide',
+        title: `${album.albumName} - Music Amaze`,
+        userName: req.user.username,
+        album: album,
+        albumTracks: albumTracks
+      });
+    });
+  }, (errorMessage) => {//not able to get authentication
+      console.log(errorMessage);
+      res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
+      res.render('music/play', {
+        displaySearch: 'hide',
+        title: 'Music Amaze',
+        userName: req.user.username
+      });
+  });
+}
+
+/**
+ * GET /play/artist/:artistId
+ * Get tracks of Artists
+ */
+
+ exports.getArtistTracks = (req, res, next) => {
+   const artistId = req.params.artistId;
+
+   var auth = getAuth();
+   auth.then((authObj) => {
+     var cookie = req.cookies.auth;
+     console.log(req.cookies.auth);
+     if (cookie === undefined) {
+       res.cookie('auth', authObj.auth, {
+         maxAge: authObj.maxAge,
+         httpOnly: true
+       });
+     } else {
+       console.log('cookie exists', cookie);
+     }
+     var tracks = getArtistTracks(artistId, authObj.auth);
+     tracks.then((artistTracks) => {
+       console.log(artistTracks)
+       res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
+       res.render('music/play', {
+         displaySearch: 'hide',
+         title: `${album.albumName} - Music Amaze`,
+         userName: req.user.username,
+         album: album,
+         albumTracks: artistTracks
+       });
+     });
+
+   }, (errorMessage) => {//not able to get authentication
+       console.log(errorMessage);
+       res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
+       res.render('music/play', {
+         displaySearch: 'hide',
+         title: 'Music Amaze',
+         userName: req.user.username
+       });
+   });
 }

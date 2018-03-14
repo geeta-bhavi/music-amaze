@@ -9,48 +9,12 @@
 </head>
 
 <body>
-  <header class="noBg" id="header">
-    <div id="headerDiv" class="grid-x">
-      <div class="small-6 medium-6 large-3 cell">
-        <a class="logoImg" href="/user/home"></a>
-        <div class="searchIcon">
-          <a id="searchIcon" href="#"><i class="fi-magnifying-glass"></i></a>
-        </div>
-      </div>
-      <div class="userMenu">
-        <span class="user-name">{{userName}}</span>
-        <div class="menuDiv">
-          <i class="fi-torso"></i>
-          <span class="menuIcon"></span>
-        </div>
-        <div id="user-menu">
-          <ul class="clearfix">
-            <li><a href="/user/changePassword"><i class="fi-lock"></i> Change Password</a></li>
-            <li><a href="/user/editProfile"><i class="fi-pencil"></i> Edit Profile</a></li>
-            <li><a href="/logout">Log Out</a></li>
-          </ul>
-        </div>
-      </div>
-    </div>
+  {{> header}}
 
-    <div id="search" class="box-search grid-x">
-      <div class="small-10 medium-offset-3 medium-6 large-offset-3 large-6 cell">
-        <div class="box-input">
-          <input type="text" id="search-text" placeholder="Search for an Artist, Song or Album" autocomplete="off" class="search-input js-search-input" value="">
-          <a class="box-search-icon js-search-icon" href="#"><i class="fi-magnifying-glass"></i></a>
-        </div>
-      </div>
-      <div class="bt-close js-search-close small-2 medium-3 large-3"><i class="fi-x"></i></div>
-    </div>
-
-
-
-  </header>
-
-
-
-  <section class="clearfix topTrend">
+  <section class="clearfix js-nonSearchView topTrend">
     {{> topTrending}}
+  </section>
+  <section id="searchCont" class="hide js-searchView clearfix">
   </section>
   <div class="bodyBg"></div>
 </body>

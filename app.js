@@ -18,16 +18,20 @@ const cookieParser = require('cookie-parser');
 /**
  * Load environment variables from .env file, where keys and passwords are configured.
  */
-dotenv.load({ path: '.env.musicamaze' });
+dotenv.load({
+  path: '.env.musicamaze'
+});
 
 /**
-* Other configurations.
-*/
-const logfile = fs.createWriteStream(path.join(__dirname, '/logs/server.log'), {flags: 'a'});
+ * Other configurations.
+ */
+const logfile = fs.createWriteStream(path.join(__dirname, '/logs/server.log'), {
+  flags: 'a'
+});
 //hbs.registerPartials(path.join(__dirname, '/views/partials'));
 var partialsDir = __dirname + '/views/partials';
 var filenames = fs.readdirSync(partialsDir);
-filenames.forEach(function (filename) {
+filenames.forEach(function(filename) {
   var matches = /^([^.]+).hbs$/.exec(filename);
   if (!matches) {
     return;
@@ -36,12 +40,14 @@ filenames.forEach(function (filename) {
   var template = fs.readFileSync(partialsDir + '/' + filename, 'utf8');
   hbs.registerPartial(name, template);
 });
-
 /**
  * Controllers (route handlers).
  */
 const indexController = require('./controllers/index');
 const userController = require('./controllers/user');
+const trackController = require('./controllers/track');
+const searchController = require('./controllers/search');
+
 
 /**
  * Passport configuration.
@@ -54,13 +60,13 @@ const passportConfig = require('./config/passport');
 const app = express();
 
 /**
-* Connect to mysql.
-*/
+ * Connect to mysql.
+ */
 const mysqlPool = mysql.createPool({
-  host     : process.env.mysqlhost,
-  user     : process.env.mysqluser,
-  password : process.env.mysqlpassword,
-  database : process.env.mysqldatabase
+  host: process.env.mysqlhost,
+  user: process.env.mysqluser,
+  password: process.env.mysqlpassword,
+  database: process.env.mysqldatabase
 });
 
 // mysqlPool.getConnection(function(err, connection) {
@@ -80,10 +86,14 @@ const mysqlPool = mysql.createPool({
 app.set('host', process.env.HOST || 'localhost');
 app.set('port', process.env.PORT || 3000);
 app.set('view engine', 'hbs');
-app.use(logger('combined', {stream: logfile}));
+app.use(logger('combined', {
+  stream: logfile
+}));
 app.use(bodyParser.json());
 app.use(cookieParser(process.env.SESSION_SECRET));
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
 app.use(expressValidator());
 app.use(cookieSession({
   secret: process.env.SESSION_SECRET,
@@ -116,6 +126,10 @@ app.get('/user/editProfile', passportConfig.isAuthenticated, userController.getE
 app.post('/user/editProfile', passportConfig.isAuthenticated, userController.postEditProfile);
 app.get('/user/changePassword', passportConfig.isAuthenticated, userController.getChangePassword);
 app.post('/user/changePassword', passportConfig.isAuthenticated, userController.postChangePassword);
+app.get('/play/album/:albumId/track/:trackId', passportConfig.isAuthenticated, trackController.getAlbumTracks);
+app.get('/play/album/:albumId', passportConfig.isAuthenticated, trackController.getAlbumTracks);
+app.get('/play/artist/:artistId', passportConfig.isAuthenticated, trackController.getArtistTracks);
+app.post('/search/:searchString', passportConfig.isAuthenticated, searchController.search);
 
 /**
  * Error Handler.
@@ -124,7 +138,7 @@ if (app.get('env') === 'development') {
   app.use(errorHandler())
 }
 
-app.use(function (req, res, next) {
+app.use(function(req, res, next) {
   res.status(404).redirect('/error')
 });
 

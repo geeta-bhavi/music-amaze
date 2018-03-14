@@ -1,4 +1,6 @@
 const Sequelize = require('sequelize');
+
+const Track = require('./Track');
 /**
  * Load sequelize handle
  */

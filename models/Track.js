@@ -1,5 +1,6 @@
 const Sequelize = require('sequelize');
 const Album = require('./Album');
+const Artist = require('./Artist');
 
 /**
  * Load sequelize handle
@@ -125,5 +126,6 @@ const schemaDefinition = {
 const Track = sequelizeHandle.define('Track', schemaDefinition);
 
 Track.belongsTo(Album, {foreignKey: 'ALBUM_ID'});
+Track.belongsTo(Artist, {foreignKey: 'ARTIST_ID'});
 
 module.exports = Track;

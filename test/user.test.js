@@ -26,6 +26,7 @@ describe('Authenticated Get tests', () => {
       .end(function(err, res) {
         if (err) throw err;
         cookie = res.headers['set-cookie'];
+        console.log(cookie)
         done();
       });
   });

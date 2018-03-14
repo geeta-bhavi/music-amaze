@@ -55,6 +55,7 @@ exports.postLogin = (req, res, next) => {
  */
 exports.logout = (req, res) => {
   req.logout();
+  res.clearCookie('auth', { httpOnly: true });
   res.redirect('/');
 };
 

@@ -63,6 +63,17 @@ div.bodyBg {
   z-index: -1;
 }
 
+div.bodyBg:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-image: linear-gradient(to bottom right, #002f4b, #383231);
+  opacity: .2;
+}
+
 dl, menu, ol, ul {
   margin: 0;
   list-style: none;
@@ -379,18 +390,19 @@ body.index #header {
   margin: auto;
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
-  background: rgba(255,255,255,1);
-  color: rgba(0,0,0,.6);
+  background: rgba(255, 255, 255, 1);
+  color: rgba(0, 0, 0, .6);
   padding: 10px 0;
 }
+
 .screenText .sli2 .features {
   font-size: 1rem;
   width: 18%;
   margin: auto;
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
-  background: rgba(255,255,255,1);
-  color: rgba(0,0,0,.6);
+  background: rgba(255, 255, 255, 1);
+  color: rgba(0, 0, 0, .6);
   padding: 10px 0;
 }
 
@@ -668,11 +680,21 @@ ul.topTrend li a div.icon {
   right: 35%;
 }
 
+@keyframes fadein {
+  from {
+    opacity: 0
+  }
+  to {
+    opacity: 1
+  }
+}
+
 ul.topTrend li a img {
   box-shadow: 0 0 10px rgba(0, 0, 0, .8);
   background: #7f574f;
   width: 140px;
   height: 140px;
+  animation: fadein 1s;
 }
 
 ul.topTrend li a .imgOverlay {
@@ -785,15 +807,20 @@ ul.topTrend li a:hover div.hov {
   position: relative;
 }
 
+.box-input input {
+  padding: .5rem .5rem .5rem 2.2rem;
+}
+
 .box-search-icon {
   position: absolute;
   top: 0;
-  right: 11px;
+  left: 11px;
   z-index: 2;
   color: #ccc;
+  transform: scaleX(-1);
 }
 
-.box-search-icon:hover .fi-magnifying-glass {
+.box-search-icon:hover .fi-magnifying-glass, .box-search-icon:focus .fi-magnifying-glass {
   color: #ccc;
 }
 
@@ -810,6 +837,7 @@ ul.topTrend li a:hover div.hov {
   background: #fff;
   color: #767676;
   top: 70px;
+  right: -30px;
   width: 180px;
   z-index: 2;
   font-size: 0.9rem;
@@ -867,9 +895,257 @@ ul.topTrend li a:hover div.hov {
     transition: 0.5s;
   }
   #user-menu ul {
-    padding: 45px 0 0;
+    padding: 55px 0 0;
   }
   #user-menu li {
     border-bottom: 1px solid rgba(255, 255, 255, .2);
   }
+}
+
+/**
+* trackList
+*/
+
+.hw-accelerate {
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+.coverArt {
+  padding: 50px;
+}
+
+.coverArt img {
+  opacity: 1;
+  box-shadow: 0 0 18px rgba(0, 0, 0, .8);
+  border-radius: 5px;
+  width: 300px;
+  transition: all 0.3s ease-in-out;
+  animation: fadein 1.5s;
+}
+
+.albumDetails {
+  padding: 50px 0 0;
+}
+
+.albumHeader {
+  padding-bottom: 10px;
+  padding-left: 20px;
+  border-bottom: 1px solid rgba(255, 255, 0, 0.4);
+  margin-bottom: 5px;
+  animation: fadein 1.5s;
+}
+
+.albumName {
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-transform: capitalize;
+}
+
+.artistName {
+  font-size: 0.9rem;
+  font-weight: bold;
+  text-transform: capitalize;
+}
+
+.genre, .yearReleased {
+  font-size: 0.9rem;
+  font-weight: bold;
+  text-transform: capitalize;
+}
+
+.separator {
+  font-size: 1.2rem;
+  top: -3px;
+  position: relative;
+}
+
+.trackList {
+  font-size: 0.9rem;
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: row;
+  align-content: center;
+  padding: 7px 10px;
+  cursor: pointer;
+  animation: fadein 1.5s;
+}
+
+.trackList:hover {
+  background: rgba(255, 255, 0, .5);
+}
+
+.trackList.highlight {
+  background: rgba(255, 255, 0, .5);
+  color: rgba(0, 0, 0, 0.9);
+}
+
+.trackList div {
+  flex: 1 0 150px;
+}
+
+.trackList div.trackItem {
+  flex: 1 0 250px;
+}
+
+.trackList .songName {
+  text-transform: capitalize;
+  text-overflow: ellipsis;
+  padding: 0 0 0 10px;
+}
+
+.audioP {
+  margin-top: 20px;
+}
+
+.trackActions {
+  text-align: center;
+}
+
+.trackActions a {
+  margin: 10px;
+  display: inline-block;
+  font-size: 1.5rem;
+}
+
+/**
+* search Results
+*/
+
+section .srTracks h3 {
+  font-weight: bold;
+  font-size: 2.2rem;
+  width: 100%;
+  padding: 20px 0;
+  text-align: center;
+}
+
+section .srTracks h3::after {
+  content: "";
+  height: 2px;
+  background-color: #1db954;
+  width: 220px;
+  position: relative;
+  top: 4px;
+  left: 4px;
+  display: block;
+  margin: 0 auto;
+}
+
+ul.srTracks {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+ul.srTracks li {
+  flex: 1 0 200px;
+  padding: 10px;
+}
+
+ul.srTracks li a {
+  display: inline-block;
+  position: relative;
+  animation: fadein 1s;
+}
+
+ul.srTracks li div.img {
+  float: left;
+  width: 40px;
+  height: 65px;
+}
+
+ul.srTracks li div.img img {
+  padding: 5px 0 0;
+}
+
+ul.srTracks div.trackItem {
+  float: left;
+  padding: 0 0 0 10px;
+  width: 170px;
+}
+
+ul.srTracks li .songName, ul.srTracks li .artistName {
+  text-transform: capitalize;
+  text-overflow: ellipsis;
+  font-size: .9rem;
+  display: inline-block;
+  width: 170px;
+  white-space: nowrap;
+  overflow: hidden;
+  line-height: 1;
+}
+ul.srTracks li .songName {
+  font-weight: bold;
+}
+ul.srTracks li .artistName {
+  font-weight: 400;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+ul.srTracks .cover-art-playback svg {
+  transform: scale(.5);
+  width: 100%;
+  height: 100%;
+}
+
+ul.srTracks .cover-art-playback {
+  transition: none 33ms cubic-bezier(.3, 0, .7, 1);
+  transition-property: all;
+  background-color: transparent;
+  display: none;
+  position: absolute;
+  z-index: 3;
+  width: 20px;
+  height: 20px;
+  top: 69%;
+  left: 20%;
+  color: #fff;
+  border: 0;
+  border-radius: 500px;
+  box-sizing: content-box;
+  outline: none;
+  box-shadow: inset 0 0 0 1px #a0a0a0;
+}
+
+ul.srTracks li a:hover .cover-art-playback {
+  display: block;
+  cursor: pointer;
+}
+
+ul.srTracks li div.hov {
+  display: none;
+}
+
+ul.srTracks li a:hover div.hov {
+  display: block;
+  background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5));
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  top: 5px;
+  left: 0;
+}
+
+ul.topTrend span.artistName {
+  font-size: .8rem;
+  font-weight: normal;
+  color: rgba(255,255,255,.8);
+}
+
+.srArtists {
+  animation: fadein 1s;
+}
+
+ul li .artist_icon {
+  position: relative;
+  background-color: #282828;
+  padding: 20px 20px 20px 30px;
+  border-radius: 50%;
+}
+
+.srArtists ul.topTrend span.artistName {
+  font-weight: bold;
+  font-size: 0.9rem;
+  color: #fff;
 }

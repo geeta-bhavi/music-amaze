@@ -1,9 +1,15 @@
 $(function() {
+
+  var mediaEle = null;
+
   /**
    * Initialize foundation
    */
   $(document).foundation();
 
+  /**
+   * Initialize slider
+   */
   $('.screenText').slick({
     dots: true,
     infinite: true,
@@ -11,6 +17,48 @@ $(function() {
     fade: true,
     cssEase: 'linear'
   });
+
+  /**
+   * Initialize audio player
+   */
+  if (window.location.pathname.indexOf('play')) {
+    $('#audioPlayer').mediaelementplayer({
+      stretching: 'responsive',
+      pluginPath: '../js/lib/build/',
+      // When using jQuery's `mediaelementplayer`, an `instance` argument
+      // is available in the `success` callback
+      success: function(mediaElement, originalNode, instance) {
+        console.log(mediaElement)
+        mediaEle = mediaElement;
+        //mediaEle.play();
+        $(mediaElement).on('ended', function() {
+          var liEle = $('li.trackList.highlight').next();
+          if (liEle.length === 0) {
+            callFocus($('li.trackList').first());
+          } else {
+            liEle.click();
+          }
+        })
+      },
+      error: function(mediaElement, originalNode) {
+        alert('There is some error at the server playing the track!');
+      }
+    });
+  }
+
+  function callFocus(liEle) {
+    $('.trackList').removeClass('highlight');
+    $('.trackItem').removeClass('fi-sound');
+    liEle.addClass('highlight');
+    liEle.find('.trackItem').addClass('fi-sound');
+    const trackSrc = liEle.data('track-src');
+    // const str = window.location.pathname;
+    // const path = str.substr(0, str.lastIndexOf("/") + 1);
+    // const trackId = liEle.attr('id');
+    mediaEle.setSrc(trackSrc);
+    mediaEle.load();
+    //history.pushState(trackId, '', path + trackId);
+  }
 
   /**
    * Register functions
@@ -26,6 +74,9 @@ $(function() {
   $('#searchIcon').on('click', displaySearchBar);
   $('.js-search-close').on('click', hideSearchBar);
   $('.menuDiv').on('click', showUserMenuD);
+  $('.trackList').on('click', changeTrack); /* change track on click */
+  $('#search-text').on('keyup', callSearch); /* search functionality */
+  $('.js-search-icon').on('click', search); /* search functionality */
   $(document).on('click', '.menuMode', showUserMenu);
   $(document).on('click', '.close-icon', hideUserMenu);
 
@@ -41,7 +92,6 @@ $(function() {
     } else {
       $('#index-menu').addClass('addFloat');
     }
-
     var width = $(window).width();
     if (width < 400) {
       $('.menuDiv').addClass('menuMode');
@@ -231,6 +281,11 @@ $(function() {
     const newPwd = $('#newPassword').val();
     const confirmPwd = $('#confirmPassword').val();
 
+    if (oldPwd.length === 0) {
+      showErrorCircle('oldPassword');
+      $('#emptyFields').removeClass('hide');
+    }
+
     if (newPwd.length === 0) {
       showErrorCircle('newPassword');
       $('#emptyFields').removeClass('hide');
@@ -241,13 +296,16 @@ $(function() {
       $('#emptyFields').removeClass('hide');
     }
 
-    if (newPwd.length !== 0 && confirmPwd !== newPwd) {
+    if (newPwd.length !== 0 && confirmPwd.length !== 0 && confirmPwd !== newPwd) {
       showErrorCircle('confirmPassword');
       $('#emptyFields').addClass('hide');
       showMessage('Confirm password doesn\'t match with the new password', 'error');
+      if (oldPwd.length === 0) {
+        $('#emptyFields').removeClass('hide');
+      }
     }
 
-    if (newPwd.length !== 0 && confirmPwd.length !== 0 && newPwd === confirmPwd) {
+    if (oldPwd.length !== 0 && newPwd.length !== 0 && confirmPwd.length !== 0 && newPwd === confirmPwd) {
       $.post('/user/changePassword', {
           oldPassword: oldPwd,
           newPassword: newPwd
@@ -319,8 +377,8 @@ $(function() {
     // const name = 'OLIVE';
     // const pwd = 'OLIVE';
     // const email = 'geeta@gmail.com';
-    if (name.length !== 0 && pwd.length !== 0 && confirmpwd.length !== 0
-      && email.length !== 0 && pwd === confirmpwd && nameVerifies) {
+    if (name.length !== 0 && pwd.length !== 0 && confirmpwd.length !== 0 &&
+      email.length !== 0 && pwd === confirmpwd && nameVerifies) {
       $.post('/signup', {
           username: name,
           password: pwd,
@@ -349,13 +407,22 @@ $(function() {
 
     $('#headerDiv').removeClass('show').addClass('hide');
     $('#search').addClass('show');
+
+    /* hide rest of data for search view */
+    $('.js-nonSearchView').addClass('hide');
+    $('.js-searchView').removeClass('hide');
   }
 
   function hideSearchBar(e) {
     e.preventDefault();
-
+    $('#search-text').val('');
     $('#headerDiv').removeClass('hide').addClass('show');
     $('#search').removeClass('show');
+
+    /* show rest of data and hide search view*/
+    $('.js-nonSearchView').removeClass('hide');
+    $('.js-searchView').addClass('hide');
+    $('.js-searchView').empty();
   }
 
   function showUserMenuD(e) {
@@ -383,13 +450,83 @@ $(function() {
     $('#user-menu').removeClass('show');
     userIcon.css('width', '180px');
     $('.close-icon').remove();
+  }
+
+  function changeTrack(e) {
+    $('.trackList').removeClass('highlight');
+    $('.trackItem').removeClass('fi-sound');
+    $(this).addClass('highlight');
+    $(this).find('.trackItem').addClass('fi-sound');
+    const trackSrc = $(this).data('track-src');
+    //const str = window.location.pathname;
+    //const path = str.substr(0, str.lastIndexOf("/") + 1);
+    //const trackId = $(this).attr('id');
+    mediaEle.setSrc(trackSrc);
+    mediaEle.load();
+    mediaEle.play();
+    //history.pushState(trackId, '', path + trackId);
+  }
+
+  /**
+   * on popstate highlight the proper track
+   */
+  // $(window).on('popstate', function(e) {
+  //   const trackId = e.originalEvent.state;
+  //   if (trackId !== null) {
+  //     const trackSrc = $(`#${trackId}`).data('track-src');
+  //     $('.trackList').removeClass('highlight');
+  //     $('.trackItem').removeClass('fi-sound');
+  //     $(`#${trackId}`).addClass('highlight');
+  //     $(`#${trackId}`).find('.trackItem').addClass('fi-sound');
+  //
+  //     mediaEle.setSrc(trackSrc);
+  //     mediaEle.load();
+  //     mediaEle.play();
+  //   } else {
+  //     const str = window.location.pathname;
+  //     const id = str.substr(str.lastIndexOf("/") + 1, str.length);
+  //     const trackSrc = $(`#${id}`).data('track-src');
+  //     $('.trackList').removeClass('highlight');
+  //     $('.trackItem').removeClass('fi-sound');
+  //     $(`#${id}`).addClass('highlight');
+  //     $(`#${id}`).find('.trackItem').addClass('fi-sound');
+  //
+  //     mediaEle.setSrc(trackSrc);
+  //     mediaEle.load();
+  //     mediaEle.play();
+  //   }
+  // });
+
+  /**
+   * Search
+   */
+  function callSearch(e) {
+    if (e.keyCode === 13) {
+      search(e);
+    }
+  }
+
+  function search(e) {
+    e.preventDefault();
+    $('.js-searchView').empty();
+    var searchString = $.trim($('#search-text').val()); /* trim beginning and ending spaces */
+    searchString = searchString.replace(/\s+/g, ' ');
+    if(searchString.length > 0 && searchString !== ' ') {
+      console.log('here'+searchString)
+      $.post(`/search/${searchString}`)
+        .fail(function(data) {
+          console.log(data)
+        })
+        .done(function(data) {
+          console.log(data);
+          $('#searchCont').html(data);
+          $('#js-searchResults').removeClass('hide');
+        });
+    }
+
 
 
   }
-
-
-
-
 
   /**
    * Utility functions
