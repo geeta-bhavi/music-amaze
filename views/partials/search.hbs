@@ -1,12 +1,14 @@
 <section id="js-searchResults">
+  <h3 class="text-center srchHead">Search results for "<span class='searchStr'>{{searchStr}}</span>"</h3>
   <div class="srTracks">
     <div class="grid-container">
       <div class="grid-x">
-        <div id="js-srTracks" class="{{showTracks}} small-12 medium-12 large-12 cell">
-          <h3>Songs</h3>
+        <div id="js-srTracks" class="{{showTracks}} sResults small-12 medium-12 large-12 cell">
+          <h3>Songs <span class="{{seeAllTracks}} seeAll"><a class="seeAllR" data-category="tracks" href="#">(See All)</a></span></h3>
+
           <ul class="srTracks">
             {{#each songs}}
-              <li>
+              <li class="clearfix">
                 <a title="{{TRACK_NAME}}" href="/play/album/{{ALBUM_ID}}/track/{{TRACK_ID}}">
                   <div class="img">
                     <img conerror="this.src='/dist/assets/error.png'" src="/assets/cover/{{ALBUM_ID}}.jpg">
@@ -23,8 +25,8 @@
           </ul>
         </div>
 
-        <div id="js-srAlbums" class="{{showAlbums}} small-12 medium-12 large-12 cell">
-          <h3>Albums</h3>
+        <div id="js-srAlbums" class="{{showAlbums}} sResults small-12 medium-12 large-12 cell">
+          <h3>Albums <span class="{{seeAllAlbums}} seeAll"><a class="seeAllR" data-category="albums" href="#">(See All)</a></span></h3>
           <ul class="topTrend">
             {{#each albums}}
             <li id="{{TRACK_ID}}">
@@ -40,8 +42,8 @@
           </ul>
         </div>
 
-        <div id="js-srArtists" class="{{showArtists}} srArtists small-12 medium-12 large-12 cell">
-          <h3>Artists</h3>
+        <div id="js-srArtists" class="{{showArtists}} sResults srArtists small-12 medium-12 large-12 cell">
+          <h3>Artists <span class="{{seeAllArtists}} seeAll"><a class="seeAllR" data-category="artists" href="#">(See All)</a></span></h3>
           <ul class="topTrend">
             {{#each artists}}
             <li id="{{TRACK_ID}}">

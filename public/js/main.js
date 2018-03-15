@@ -28,22 +28,88 @@ $(function() {
       // When using jQuery's `mediaelementplayer`, an `instance` argument
       // is available in the `success` callback
       success: function(mediaElement, originalNode, instance) {
-        console.log(mediaElement)
         mediaEle = mediaElement;
+        highLightPrevNext();
+
         //mediaEle.play();
         $(mediaElement).on('ended', function() {
-          var liEle = $('li.trackList.highlight').next();
-          if (liEle.length === 0) {
-            callFocus($('li.trackList').first());
-          } else {
+          if ($('#trackShuffle').hasClass('active')) {
+            const liCount = $('li.trackList').length;
+            const random = Math.floor((Math.random() * liCount) + 1);
+            var liEle = $('li.trackList:nth-child(' + random + ')');
+
+
+            if (liEle.hasClass('highlight')) {
+              liEle = liEle.next();
+              if (liEle.length === 0) {
+                liEle = $('li.trackList:nth-child(1)');
+              }
+            }
+
             liEle.click();
+            highLightPrevNext();
+
+          } else {
+            var liEle = $('li.trackList.highlight').next();
+            if ($('#trackRepeat').hasClass('active')) {
+              mediaElement.play();
+            } else {
+              if (liEle.length === 0) {
+                callFocus($('li.trackList').first());
+              } else {
+                liEle.click();
+              }
+            }
+            highLightPrevNext();
           }
-        })
+        });
       },
       error: function(mediaElement, originalNode) {
         alert('There is some error at the server playing the track!');
       }
     });
+  }
+
+  function shuffleTracks(e) {
+    e.preventDefault();
+    if (!$(this).hasClass('inactive')) {
+      $(this).toggleClass('active');
+    }
+  }
+
+  function playPrevious(e) {
+    e.preventDefault();
+    if (!$(this).hasClass('inactive')) {
+      var liEle = $('li.trackList.highlight').prev();
+      liEle.click();
+      highLightPrevNext();
+    }
+  }
+
+  function playNext(e) {
+    e.preventDefault();
+    if (!$(this).hasClass('inactive')) {
+      var liEle = $('li.trackList.highlight').next();
+      liEle.click();
+      highLightPrevNext();
+    }
+  }
+
+  function highLightPrevNext() {
+    if ($('li.trackList.highlight').prev().length === 0) {
+      $('#trackPrev').addClass('inactive');
+    } else {
+      $('#trackPrev').removeClass('inactive');
+    }
+    if ($('li.trackList.highlight').next().length === 0) {
+      $('#trackNext').addClass('inactive');
+    } else {
+      $('#trackNext').removeClass('inactive');
+    }
+
+    if ($('li.trackList.highlight').prev().length === 0 && $('li.trackList.highlight').next().length === 0) {
+      $('#trackShuffle').addClass('inactive');
+    }
   }
 
   function callFocus(liEle) {
@@ -77,8 +143,14 @@ $(function() {
   $('.trackList').on('click', changeTrack); /* change track on click */
   $('#search-text').on('keyup', callSearch); /* search functionality */
   $('.js-search-icon').on('click', search); /* search functionality */
+  $('#trackRepeat').on('click', linkActive);
+  $('#trackLike').on('click', linkActive);
+  $('#trackPrev').on('click', playPrevious); /* play previous track */
+  $('#trackNext').on('click', playNext); /* play next track */
+  $('#trackShuffle').on('click', shuffleTracks); /* shuffle tracks*/
   $(document).on('click', '.menuMode', showUserMenu);
   $(document).on('click', '.close-icon', hideUserMenu);
+  $(document).on('click', '.seeAllR', seeAllResults); /* see all the tracks of search results */
 
 
   var user = null;
@@ -403,7 +475,9 @@ $(function() {
   }
 
   function displaySearchBar(e) {
-    e.preventDefault();
+    if (e) {
+      e.preventDefault();
+    }
 
     $('#headerDiv').removeClass('show').addClass('hide');
     $('#search').addClass('show');
@@ -422,7 +496,10 @@ $(function() {
     /* show rest of data and hide search view*/
     $('.js-nonSearchView').removeClass('hide');
     $('.js-searchView').addClass('hide');
-    $('.js-searchView').empty();
+    //$('.js-searchView').empty();
+    if (window.location.pathname.indexOf('user') === -1) {
+      window.location.pathname = '/user/home';
+    }
   }
 
   function showUserMenuD(e) {
@@ -453,18 +530,21 @@ $(function() {
   }
 
   function changeTrack(e) {
-    $('.trackList').removeClass('highlight');
-    $('.trackItem').removeClass('fi-sound');
-    $(this).addClass('highlight');
-    $(this).find('.trackItem').addClass('fi-sound');
-    const trackSrc = $(this).data('track-src');
-    //const str = window.location.pathname;
-    //const path = str.substr(0, str.lastIndexOf("/") + 1);
-    //const trackId = $(this).attr('id');
-    mediaEle.setSrc(trackSrc);
-    mediaEle.load();
-    mediaEle.play();
-    //history.pushState(trackId, '', path + trackId);
+    if (!$(this).hasClass('highlight')) {
+      $('.trackList').removeClass('highlight');
+      $('.trackItem').removeClass('fi-sound');
+      $(this).addClass('highlight');
+      $(this).find('.trackItem').addClass('fi-sound');
+      const trackSrc = $(this).data('track-src');
+      //const str = window.location.pathname;
+      //const path = str.substr(0, str.lastIndexOf("/") + 1);
+      //const trackId = $(this).attr('id');
+      mediaEle.setSrc(trackSrc);
+      mediaEle.load();
+      mediaEle.play();
+      //history.pushState(trackId, '', path + trackId);
+    }
+
   }
 
   /**
@@ -506,26 +586,95 @@ $(function() {
     }
   }
 
-  function search(e) {
-    e.preventDefault();
-    $('.js-searchView').empty();
-    var searchString = $.trim($('#search-text').val()); /* trim beginning and ending spaces */
-    searchString = searchString.replace(/\s+/g, ' ');
-    if(searchString.length > 0 && searchString !== ' ') {
-      console.log('here'+searchString)
-      $.post(`/search/${searchString}`)
-        .fail(function(data) {
-          console.log(data)
-        })
-        .done(function(data) {
-          console.log(data);
-          $('#searchCont').html(data);
-          $('#js-searchResults').removeClass('hide');
-        });
+  function search(e, str, popstate) {
+    if (e !== null) {
+      e.preventDefault();
     }
 
+    $('.js-searchView').empty();
+    var searchString = (str !== undefined) ? str : $.trim($('#search-text').val()); /* trim beginning and ending spaces */
+    searchString = searchString.replace(/\s+/g, ' ');
+    if (searchString.length > 0 && searchString !== ' ') {
+      $.post(`/search/${searchString}`)
+        .fail(function(data) {
+          console.log(data);
+          $('#searchCont').html(data);
+        })
+        .done(function(data) {
+          $('#searchCont').html(data);
+          $('#js-searchResults').removeClass('hide');
+          if (popstate === undefined) {
+            const str = `/search/${searchString}`;
+            history.pushState({
+              search: searchString
+            }, '', str);
+          }
+        });
+    }
+  }
 
+  console.log(window.history.state);
+  console.log(window.history);
 
+  if (window.history.state !== null) {
+    const state = window.history.state;
+    if (state.search !== undefined && state.category === undefined) {
+      displaySearchBar();
+      search(null, state.search, 'noPopstate');
+    } else if (state.search !== undefined && state.category !== undefined) {
+      displaySearchBar();
+      seeAllResults(null, state.search, state.category, 'noPopstate');
+    }
+  }
+
+  /**
+   * on popstate highlight get the proper view
+   */
+
+  $(window).on('popstate', function(e) {
+    console.log(e);
+    const state = e.originalEvent.state;
+
+    if (state === null) {
+      const path = window.location.href;
+      window.location.href = path;
+    } else if (state.search !== undefined && state.category === undefined) {
+      displaySearchBar(e);
+      search(e, state.search, 'noPopstate');
+    } else if (state.search !== undefined && state.category !== undefined) {
+      displaySearchBar(e);
+      seeAllResults(e, state.search, state.category, 'noPopstate');
+    }
+  });
+
+  function seeAllResults(e, srchStr, categry, popstate) {
+    if (e !== null) {
+      e.preventDefault();
+    }
+
+    const searchStr = (srchStr !== undefined) ? srchStr : $('.searchStr').html();
+    const category = (categry !== undefined) ? categry : $(this).data('category');
+
+    $.post(`/search/${category}/${searchStr}`)
+      .fail(function(data) {
+        $('#searchCont').html(data);
+      })
+      .done(function(data) {
+        $('#searchCont').html(data);
+        $('#js-searchResults').removeClass('hide');
+        if (popstate === undefined) {
+          const str = `/search/${category}/${searchStr}`;
+          history.pushState({
+            search: searchStr,
+            category: category
+          }, '', str);
+        }
+      });
+  }
+
+  function linkActive(e) {
+    e.preventDefault();
+    $(this).toggleClass('active');
   }
 
   /**

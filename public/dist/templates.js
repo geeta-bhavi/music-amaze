@@ -58,7 +58,7 @@ this["templates"]["header"] = Handlebars.template({"compiler":[7,">= 4.0.0"],"ma
     + "</span>\n      <div class=\"menuDiv\">\n        <i class=\"fi-torso\"></i>\n        <span class=\"menuIcon\"></span>\n      </div>\n      <div id=\"user-menu\">\n        <ul class=\"clearfix\">\n          <li><a href=\"/user/changePassword\"><i class=\"fi-lock\"></i> Change Password</a></li>\n          <li><a href=\"/user/editProfile\"><i class=\"fi-pencil\"></i> Edit Profile</a></li>\n          <li><a href=\"/logout\">Log Out</a></li>\n        </ul>\n      </div>\n    </div>\n  </div>\n\n  <div id=\"search\" class=\"box-search grid-x\">\n    <div class=\"small-10 medium-offset-3 medium-6 large-offset-3 large-6 cell\">\n      <div class=\"box-input\">\n        <input type=\"text\" id=\"search-text\" placeholder=\"Search for an Artist, Song or Album\" autocomplete=\"off\" class=\"search-input js-search-input\" value=\"\">\n        <a class=\"box-search-icon js-search-icon\" href=\"#\"><i class=\"fi-magnifying-glass\"></i></a>\n      </div>\n    </div>\n    <div class=\"bt-close js-search-close small-2 medium-3 large-3\"><i class=\"fi-x\"></i></div>\n  </div>\n</header>\n";
 },"useData":true});
 this["templates"]["listTracks"] = Handlebars.template({"1":function(container,depth0,helpers,partials,data) {
-    var stack1, alias1=container.lambda, alias2=container.escapeExpression;
+    var stack1, alias1=container.lambda, alias2=container.escapeExpression, alias3=depth0 != null ? depth0 : (container.nullContext || {});
 
   return "      <div class=\"small-12 medium-6 large-4 cell coverArt\">\n        <img onerror=\"this.src='/dist/assets/error.png'\" src=\"/assets/cover/"
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.album : depth0)) != null ? stack1.albumId : stack1), depth0))
@@ -66,21 +66,34 @@ this["templates"]["listTracks"] = Handlebars.template({"1":function(container,de
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.album : depth0)) != null ? stack1.albumName : stack1), depth0))
     + "\">\n        <div class=\"audioP\">\n          <div class=\"players\" id=\"player2-container\">\n            <div class=\"media-wrapper\">\n              <audio id=\"audioPlayer\" preload=\"none\" controls style=\"max-width:100%;\">\n                <source src=\""
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.album : depth0)) != null ? stack1.trackSource : stack1), depth0))
-    + "\" type=\"audio/mp3\">\n                  Your browser does not support the audio element.\n              </audio>\n            </div>\n          </div>\n        </div>\n        <div class=\"trackActions\">\n          <span><a href=\"#\"><i class=\"fi-loop\"></i></a></span>\n          <span><a href=\"#\"><i class=\"fi-previous\"></i></a></span>\n          <span><a href=\"#\"><i class=\"fi-next\"></i></i></a></span>\n          <span><a href=\"#\"><i class=\"fi-plus\"></i></a></span>\n          <span><a href=\"#\"><i class=\"fi-heart\"></i></a></span>\n        </div>\n      </div>\n\n      <div class=\"small-12 medium-6 large-offset-1 large-6 cell albumDetails\">\n        <div class=\"albumHeader\">\n          <div class=\"albumName\">\n            "
-    + alias2(alias1(((stack1 = (depth0 != null ? depth0.album : depth0)) != null ? stack1.albumName : stack1), depth0))
-    + "\n          </div>\n          <div class=\"artistName\">\n            "
-    + alias2(alias1(((stack1 = (depth0 != null ? depth0.album : depth0)) != null ? stack1.artistName : stack1), depth0))
-    + "\n          </div>\n          <span class=\"genre\">\n            "
-    + alias2(alias1(((stack1 = (depth0 != null ? depth0.album : depth0)) != null ? stack1.genre : stack1), depth0))
-    + "\n            <span class=\"separator\">"
-    + alias2(alias1(((stack1 = (depth0 != null ? depth0.album : depth0)) != null ? stack1.separator : stack1), depth0))
-    + "</span>\n          </span>\n          <span class=\"yearReleased\">\n            "
-    + alias2(alias1(((stack1 = (depth0 != null ? depth0.album : depth0)) != null ? stack1.yearReleased : stack1), depth0))
-    + "\n          </span>\n        </div>\n        <ul id=\"tracks\">\n"
-    + ((stack1 = helpers.each.call(depth0 != null ? depth0 : (container.nullContext || {}),(depth0 != null ? depth0.albumTracks : depth0),{"name":"each","hash":{},"fn":container.program(2, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "\" type=\"audio/mp3\">\n                  Your browser does not support the audio element.\n              </audio>\n            </div>\n          </div>\n        </div>\n        <div class=\"trackActions\">\n          <span><a id=\"trackShuffle\" href=\"#\"><i class=\"fi-shuffle\"></i></a></span>\n          <span><a id=\"trackRepeat\" href=\"#\"><i class=\"fi-loop\"></i></a></span>\n          <span><a id=\"trackPrev\" href=\"#\"><i class=\"fi-previous\"></i></a></span>\n          <span><a id=\"trackNext\" href=\"#\"><i class=\"fi-next\"></i></i></a></span>\n          <span><a id=\"trackPlaylist\" href=\"#\"><i class=\"fi-plus\"></i></a></span>\n          <span><a id=\"trackLike\" href=\"#\"><i class=\"fi-heart\"></i></a></span>\n        </div>\n      </div>\n\n      <div class=\"small-12 medium-6 large-offset-1 large-6 cell albumDetails\">\n\n        <div class=\"albumHeader\">\n"
+    + ((stack1 = helpers.unless.call(alias3,(depth0 != null ? depth0.artist : depth0),{"name":"unless","hash":{},"fn":container.program(2, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers["if"].call(alias3,(depth0 != null ? depth0.artist : depth0),{"name":"if","hash":{},"fn":container.program(4, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "        </div>\n        <ul id=\"tracks\">\n"
+    + ((stack1 = helpers.each.call(alias3,(depth0 != null ? depth0.albumTracks : depth0),{"name":"each","hash":{},"fn":container.program(6, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "        </ul>\n      </div>\n";
 },"2":function(container,depth0,helpers,partials,data) {
-    var helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
+    var stack1, alias1=container.lambda, alias2=container.escapeExpression;
+
+  return "            <div class=\"albumName\">\n              "
+    + alias2(alias1(((stack1 = (depth0 != null ? depth0.album : depth0)) != null ? stack1.albumName : stack1), depth0))
+    + "\n            </div>\n            <div class=\"artistName\">\n              "
+    + alias2(alias1(((stack1 = (depth0 != null ? depth0.album : depth0)) != null ? stack1.artistName : stack1), depth0))
+    + "\n            </div>\n            <span class=\"genre\">\n              "
+    + alias2(alias1(((stack1 = (depth0 != null ? depth0.album : depth0)) != null ? stack1.genre : stack1), depth0))
+    + "\n              <span class=\"separator\">"
+    + alias2(alias1(((stack1 = (depth0 != null ? depth0.album : depth0)) != null ? stack1.separator : stack1), depth0))
+    + "</span>\n            </span>\n            <span class=\"yearReleased\">\n              "
+    + alias2(alias1(((stack1 = (depth0 != null ? depth0.album : depth0)) != null ? stack1.yearReleased : stack1), depth0))
+    + "\n            </span>\n";
+},"4":function(container,depth0,helpers,partials,data) {
+    var stack1;
+
+  return "            <div class=\"artist-name\">"
+    + container.escapeExpression(container.lambda(((stack1 = (depth0 != null ? depth0.artist : depth0)) != null ? stack1.artistName : stack1), depth0))
+    + "</div>\n";
+},"6":function(container,depth0,helpers,partials,data) {
+    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 
   return "            <li class=\"trackList "
     + alias4(((helper = (helper = helpers.highlight || (depth0 != null ? depth0.highlight : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"highlight","hash":{},"data":data}) : helper)))
@@ -90,19 +103,31 @@ this["templates"]["listTracks"] = Handlebars.template({"1":function(container,de
     + alias4(((helper = (helper = helpers.TRACK_SOURCE || (depth0 != null ? depth0.TRACK_SOURCE : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"TRACK_SOURCE","hash":{},"data":data}) : helper)))
     + "\">\n              <div class=\"trackItem "
     + alias4(((helper = (helper = helpers.soundIcon || (depth0 != null ? depth0.soundIcon : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"soundIcon","hash":{},"data":data}) : helper)))
-    + "\">\n                <span class=\"songName\">"
+    + "\">\n                <span class=\"songName "
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.artistalbum : depth0),{"name":"if","hash":{},"fn":container.program(7, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "\">"
     + alias4(((helper = (helper = helpers.TRACK_NAME || (depth0 != null ? depth0.TRACK_NAME : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"TRACK_NAME","hash":{},"data":data}) : helper)))
-    + "</span>\n              </div>\n              <div class=\"text-right\">"
+    + "</span>\n"
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.artistalbum : depth0),{"name":"if","hash":{},"fn":container.program(9, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "              </div>\n              <div class=\"text-right\">"
     + alias4(((helper = (helper = helpers.trackTime || (depth0 != null ? depth0.trackTime : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"trackTime","hash":{},"data":data}) : helper)))
     + "</div>\n            </li>\n";
-},"4":function(container,depth0,helpers,partials,data) {
+},"7":function(container,depth0,helpers,partials,data) {
+    return "emphasize";
+},"9":function(container,depth0,helpers,partials,data) {
+    var helper;
+
+  return "                  <span class=\"album-name\">Album Name - "
+    + container.escapeExpression(((helper = (helper = helpers.artistalbum || (depth0 != null ? depth0.artistalbum : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : (container.nullContext || {}),{"name":"artistalbum","hash":{},"data":data}) : helper)))
+    + "</span>\n";
+},"11":function(container,depth0,helpers,partials,data) {
     return "      <div class=\"small-12 medium-12 large-12 cell text-center\">\n        There is some error getting the tracks.\n      </div>\n";
 },"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
     var stack1, alias1=depth0 != null ? depth0 : (container.nullContext || {});
 
   return "<div class=\"grid-container\">\n  <div class=\"grid-x\">\n"
     + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.album : depth0),{"name":"if","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + ((stack1 = helpers.unless.call(alias1,(depth0 != null ? depth0.album : depth0),{"name":"unless","hash":{},"fn":container.program(4, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers.unless.call(alias1,(depth0 != null ? depth0.album : depth0),{"name":"unless","hash":{},"fn":container.program(11, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "  </div>\n</div>\n";
 },"useData":true});
 this["templates"]["scripts"] = Handlebars.template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
@@ -111,7 +136,7 @@ this["templates"]["scripts"] = Handlebars.template({"compiler":[7,">= 4.0.0"],"m
 this["templates"]["search"] = Handlebars.template({"1":function(container,depth0,helpers,partials,data) {
     var helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 
-  return "              <li>\n                <a title=\""
+  return "              <li class=\"clearfix\">\n                <a title=\""
     + alias4(((helper = (helper = helpers.TRACK_NAME || (depth0 != null ? depth0.TRACK_NAME : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"TRACK_NAME","hash":{},"data":data}) : helper)))
     + "\" href=\"/play/album/"
     + alias4(((helper = (helper = helpers.ALBUM_ID || (depth0 != null ? depth0.ALBUM_ID : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"ALBUM_ID","hash":{},"data":data}) : helper)))
@@ -157,17 +182,25 @@ this["templates"]["search"] = Handlebars.template({"1":function(container,depth0
 },"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
     var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 
-  return "<section id=\"js-searchResults\">\n  <div class=\"srTracks\">\n    <div class=\"grid-container\">\n      <div class=\"grid-x\">\n        <div id=\"js-srTracks\" class=\""
+  return "<section id=\"js-searchResults\">\n  <h3 class=\"text-center srchHead\">Search results for \"<span class='searchStr'>"
+    + alias4(((helper = (helper = helpers.searchStr || (depth0 != null ? depth0.searchStr : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"searchStr","hash":{},"data":data}) : helper)))
+    + "</span>\"</h3>\n  <div class=\"srTracks\">\n    <div class=\"grid-container\">\n      <div class=\"grid-x\">\n        <div id=\"js-srTracks\" class=\""
     + alias4(((helper = (helper = helpers.showTracks || (depth0 != null ? depth0.showTracks : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"showTracks","hash":{},"data":data}) : helper)))
-    + " small-12 medium-12 large-12 cell\">\n          <h3>Songs</h3>\n          <ul class=\"srTracks\">\n"
+    + " sResults small-12 medium-12 large-12 cell\">\n          <h3>Songs <span class=\""
+    + alias4(((helper = (helper = helpers.seeAllTracks || (depth0 != null ? depth0.seeAllTracks : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"seeAllTracks","hash":{},"data":data}) : helper)))
+    + " seeAll\"><a class=\"seeAllR\" data-category=\"tracks\" href=\"#\">(See All)</a></span></h3>\n\n          <ul class=\"srTracks\">\n"
     + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.songs : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "          </ul>\n        </div>\n\n        <div id=\"js-srAlbums\" class=\""
     + alias4(((helper = (helper = helpers.showAlbums || (depth0 != null ? depth0.showAlbums : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"showAlbums","hash":{},"data":data}) : helper)))
-    + " small-12 medium-12 large-12 cell\">\n          <h3>Albums</h3>\n          <ul class=\"topTrend\">\n"
+    + " sResults small-12 medium-12 large-12 cell\">\n          <h3>Albums <span class=\""
+    + alias4(((helper = (helper = helpers.seeAllAlbums || (depth0 != null ? depth0.seeAllAlbums : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"seeAllAlbums","hash":{},"data":data}) : helper)))
+    + " seeAll\"><a class=\"seeAllR\" data-category=\"albums\" href=\"#\">(See All)</a></span></h3>\n          <ul class=\"topTrend\">\n"
     + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.albums : depth0),{"name":"each","hash":{},"fn":container.program(3, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "          </ul>\n        </div>\n\n        <div id=\"js-srArtists\" class=\""
     + alias4(((helper = (helper = helpers.showArtists || (depth0 != null ? depth0.showArtists : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"showArtists","hash":{},"data":data}) : helper)))
-    + " srArtists small-12 medium-12 large-12 cell\">\n          <h3>Artists</h3>\n          <ul class=\"topTrend\">\n"
+    + " sResults srArtists small-12 medium-12 large-12 cell\">\n          <h3>Artists <span class=\""
+    + alias4(((helper = (helper = helpers.seeAllArtists || (depth0 != null ? depth0.seeAllArtists : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"seeAllArtists","hash":{},"data":data}) : helper)))
+    + " seeAll\"><a class=\"seeAllR\" data-category=\"artists\" href=\"#\">(See All)</a></span></h3>\n          <ul class=\"topTrend\">\n"
     + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.artists : depth0),{"name":"each","hash":{},"fn":container.program(5, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "          </ul>\n        </div>\n\n\n\n      </div>\n    </div>\n  </div>\n</section>\n";
 },"useData":true});

@@ -9,6 +9,7 @@ const Artist = require('../models/Artist');
 
 const Op = Sequelize.Op;
 var album = {};
+var artist = {};
 
 
 /**
@@ -49,15 +50,14 @@ exports.getTopTrending = () => {
         obj.Album_NAME = r.Album.dataValues.ALBUM_NAME;
         return obj;
       });
-      //console.log(data);
       resolve(data);
     })
   });
 }
 
 /**
-* getArtistTracks method
-*/
+ * getArtistTracks method
+ */
 
 const getArtistTracks = (artistId, auth) => {
   return new Promise((resolve, reject) => {
@@ -77,14 +77,13 @@ const getArtistTracks = (artistId, auth) => {
       ]
     }).then(results => {
       const trackId = results[0].dataValues.TRACK_ID;
-      album.albumId = results[0].dataValues.ALBUM_ID;
+      album.albumId = results[0].dataValues.ALBUM_ID; /* we will make first album as the cover art*/
+      artist.artistName = results[0].Artist.dataValues.STAGE_NAME;
       var data = results.map((r) => {
         var obj = r.dataValues;
         obj.trackTime = fancyTimeFormat(r.dataValues.TRACK_TIME);
-        obj.albumName = r.Album.dataValues.ALBUM_NAME;
-        obj.artistName = r.Artist.dataValues.STAGE_NAME;
+        obj.artistalbum = r.Album.dataValues.ALBUM_NAME;
         var trackSrc = r.dataValues.TRACK_SOURCE;
-
         /* replace old auth with new */
         trackSrc = trackSrc.replace('a538266a2ea125ce06cf34fff192f47c', auth);
         r.dataValues.TRACK_SOURCE = trackSrc;
@@ -127,20 +126,31 @@ const getTracks = (albumId, trackId, auth) => {
         ['TRACK_NUM', 'ASC']
       ],
     }).then(results => {
-      if(trackId === undefined) {
+      if (trackId === undefined) {
         trackId = results[0].dataValues.TRACK_ID;
       }
+
+      album.albumName = results[0].Album.dataValues.ALBUM_NAME;
+      album.albumId = results[0].dataValues.ALBUM_ID;
+      album.artistName = results[0].Artist.dataValues.STAGE_NAME;
+      album.genre = results[0].GENRE;
+      album.yearReleased = results[0].Album.dataValues.YEAR_RELEASED;
+      album.separator = '';
+
+      if (album.genre === null) {
+        album.genre = '';
+      }
+      if (album.yearReleased === 0) {
+        album.yearReleased = '';
+      }
+      if ((album.genre && album.yearReleased) !== '') {
+        album.separator = ' .';
+      }
+
       var data = results.map((r) => {
         var obj = r.dataValues;
-        album.albumName = r.Album.dataValues.ALBUM_NAME;
-        album.albumId = r.dataValues.ALBUM_ID;
-        obj.trackTime = fancyTimeFormat(r.dataValues.TRACK_TIME);
-        album.artistName = r.Artist.dataValues.STAGE_NAME;
-        album.genre = r.GENRE;
-        album.yearReleased = r.Album.dataValues.YEAR_RELEASED;
-        album.separator = '';
         var trackSrc = r.dataValues.TRACK_SOURCE;
-
+        obj.trackTime = fancyTimeFormat(r.dataValues.TRACK_TIME);
         /* replace old auth with new */
         trackSrc = trackSrc.replace('a538266a2ea125ce06cf34fff192f47c', auth);
         r.dataValues.TRACK_SOURCE = trackSrc;
@@ -149,15 +159,6 @@ const getTracks = (albumId, trackId, auth) => {
           album.trackSource = r.dataValues.TRACK_SOURCE;
           obj.highlight = 'highlight';
           obj.soundIcon = 'fi-sound';
-        }
-        if (album.genre === null) {
-          album.genre = '';
-        }
-        if (album.yearReleased === 0) {
-          album.yearReleased = '';
-        }
-        if ((album.genre && album.yearReleased) !== '') {
-          album.separator = ' .';
         }
         return obj;
       });
@@ -196,11 +197,11 @@ const getAuth = () => {
     const url =
       'http://music.lannysport.net/server/xml.server.php?action=handshake&auth=' + passphrase + '&timestamp=' + time + '&version=350001&user=vaibhav';
     request.get(url, (error, response, body) => {
-      if(error) {
+      if (error) {
         reject('Unable to connect to lannysport server');
       } else {
         parseString(body, function(err, result) {
-          if(err) {
+          if (err) {
             reject('Unable to get authentication');
           }
           resolve({
@@ -248,14 +249,14 @@ exports.getAlbumTracks = (req, res, next) => {
         albumTracks: albumTracks
       });
     });
-  }, (errorMessage) => {//not able to get authentication
-      console.log(errorMessage);
-      res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
-      res.render('music/play', {
-        displaySearch: 'hide',
-        title: 'Music Amaze',
-        userName: req.user.username
-      });
+  }, (errorMessage) => { //not able to get authentication
+    console.log(errorMessage);
+    res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
+    res.render('music/play', {
+      displaySearch: 'hide',
+      title: 'Music Amaze',
+      userName: req.user.username
+    });
   });
 }
 
@@ -264,41 +265,41 @@ exports.getAlbumTracks = (req, res, next) => {
  * Get tracks of Artists
  */
 
- exports.getArtistTracks = (req, res, next) => {
-   const artistId = req.params.artistId;
+exports.getArtistTracks = (req, res, next) => {
+  const artistId = req.params.artistId;
 
-   var auth = getAuth();
-   auth.then((authObj) => {
-     var cookie = req.cookies.auth;
-     console.log(req.cookies.auth);
-     if (cookie === undefined) {
-       res.cookie('auth', authObj.auth, {
-         maxAge: authObj.maxAge,
-         httpOnly: true
-       });
-     } else {
-       console.log('cookie exists', cookie);
-     }
-     var tracks = getArtistTracks(artistId, authObj.auth);
-     tracks.then((artistTracks) => {
-       console.log(artistTracks)
-       res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
-       res.render('music/play', {
-         displaySearch: 'hide',
-         title: `${album.albumName} - Music Amaze`,
-         userName: req.user.username,
-         album: album,
-         albumTracks: artistTracks
-       });
-     });
+  var auth = getAuth();
+  auth.then((authObj) => {
+    var cookie = req.cookies.auth;
+    console.log(req.cookies.auth);
+    if (cookie === undefined) {
+      res.cookie('auth', authObj.auth, {
+        maxAge: authObj.maxAge,
+        httpOnly: true
+      });
+    } else {
+      console.log('cookie exists', cookie);
+    }
+    var tracks = getArtistTracks(artistId, authObj.auth);
+    tracks.then((artistTracks) => {
+      res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
+      res.render('music/play', {
+        displaySearch: 'hide',
+        title: `${artist.artistName} - Music Amaze`,
+        userName: req.user.username,
+        album: album,
+        artist: artist,
+        albumTracks: artistTracks
+      });
+    });
 
-   }, (errorMessage) => {//not able to get authentication
-       console.log(errorMessage);
-       res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
-       res.render('music/play', {
-         displaySearch: 'hide',
-         title: 'Music Amaze',
-         userName: req.user.username
-       });
-   });
+  }, (errorMessage) => { //not able to get authentication
+    console.log(errorMessage);
+    res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
+    res.render('music/play', {
+      displaySearch: 'hide',
+      title: 'Music Amaze',
+      userName: req.user.username
+    });
+  });
 }

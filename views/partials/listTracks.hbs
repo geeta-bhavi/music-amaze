@@ -14,35 +14,45 @@
           </div>
         </div>
         <div class="trackActions">
-          <span><a href="#"><i class="fi-loop"></i></a></span>
-          <span><a href="#"><i class="fi-previous"></i></a></span>
-          <span><a href="#"><i class="fi-next"></i></i></a></span>
-          <span><a href="#"><i class="fi-plus"></i></a></span>
-          <span><a href="#"><i class="fi-heart"></i></a></span>
+          <span><a id="trackShuffle" href="#"><i class="fi-shuffle"></i></a></span>
+          <span><a id="trackRepeat" href="#"><i class="fi-loop"></i></a></span>
+          <span><a id="trackPrev" href="#"><i class="fi-previous"></i></a></span>
+          <span><a id="trackNext" href="#"><i class="fi-next"></i></i></a></span>
+          <span><a id="trackPlaylist" href="#"><i class="fi-plus"></i></a></span>
+          <span><a id="trackLike" href="#"><i class="fi-heart"></i></a></span>
         </div>
       </div>
 
       <div class="small-12 medium-6 large-offset-1 large-6 cell albumDetails">
+
         <div class="albumHeader">
-          <div class="albumName">
-            {{album.albumName}}
-          </div>
-          <div class="artistName">
-            {{album.artistName}}
-          </div>
-          <span class="genre">
-            {{album.genre}}
-            <span class="separator">{{album.separator}}</span>
-          </span>
-          <span class="yearReleased">
-            {{album.yearReleased}}
-          </span>
+          {{#unless artist}}
+            <div class="albumName">
+              {{album.albumName}}
+            </div>
+            <div class="artistName">
+              {{album.artistName}}
+            </div>
+            <span class="genre">
+              {{album.genre}}
+              <span class="separator">{{album.separator}}</span>
+            </span>
+            <span class="yearReleased">
+              {{album.yearReleased}}
+            </span>
+          {{/unless}}
+          {{#if artist}}
+            <div class="artist-name">{{artist.artistName}}</div>
+          {{/if}}
         </div>
         <ul id="tracks">
           {{#each albumTracks}}
             <li class="trackList {{highlight}}" id="{{TRACK_ID}}" data-track-src="{{TRACK_SOURCE}}">
               <div class="trackItem {{soundIcon}}">
-                <span class="songName">{{TRACK_NAME}}</span>
+                <span class="songName {{#if artistalbum}}emphasize{{/if}}">{{TRACK_NAME}}</span>
+                {{#if artistalbum}}
+                  <span class="album-name">Album Name - {{artistalbum}}</span>
+                {{/if}}
               </div>
               <div class="text-right">{{trackTime}}</div>
             </li>

@@ -208,6 +208,7 @@ div#error, div#msg {
 div#error, #emptyFields {
   color: #FF4500;
   padding-top: 10px;
+  font-weight: bold;
 }
 
 div#msg {
@@ -986,12 +987,14 @@ ul.topTrend li a:hover div.hov {
 
 .trackList div.trackItem {
   flex: 1 0 250px;
+  position: relative;
 }
 
 .trackList .songName {
   text-transform: capitalize;
   text-overflow: ellipsis;
   padding: 0 0 0 10px;
+  display: inline-block;
 }
 
 .audioP {
@@ -1008,9 +1011,53 @@ ul.topTrend li a:hover div.hov {
   font-size: 1.5rem;
 }
 
+.fi-sound:before {
+  content: "\f1ed";
+  position: absolute;
+  top: 5px;
+  left: -5px;
+}
+
+.artist-name {
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-transform: capitalize;
+}
+
+.album-name {
+  display: block;
+  font-size: 0.8rem;
+  padding: 0 0 0 10px;
+  text-transform: capitalize;
+}
+
+.emphasize {
+  font-weight: bold;
+}
+
+
+#trackRepeat:focus, #trackLike:focus, #trackNext:focus, #trackShuffle:focus {
+  color: #fff;
+}
+#trackRepeat.active:focus, #trackRepeat.active, #trackShuffle.active:focus, #trackShuffle.active {
+  color: rgba(210, 207, 31, 0.8);
+}
+#trackLike.active:focus, #trackLike.active {
+  color: rgba(251, 74, 74, 0.8)
+}
+#trackPrev.inactive, #trackNext.inactive, #trackShuffle.inactive {
+  color: rgba(204, 204, 204, 0.6);
+  cursor: auto;
+}
+
 /**
 * search Results
 */
+
+.searchStr {
+  font-weight: bold;
+  color: rgba(0, 0, 0, 0.6);
+}
 
 section .srTracks h3 {
   font-weight: bold;
@@ -1018,6 +1065,11 @@ section .srTracks h3 {
   width: 100%;
   padding: 20px 0;
   text-align: center;
+}
+
+section .srTracks span.seeAll {
+  font-size: 1rem;
+  font-weight: normal;
 }
 
 section .srTracks h3::after {
@@ -1038,7 +1090,7 @@ ul.srTracks {
 }
 
 ul.srTracks li {
-  flex: 1 0 200px;
+  flex: 1 0 250px;
   padding: 10px;
 }
 
@@ -1072,11 +1124,12 @@ ul.srTracks li .songName, ul.srTracks li .artistName {
   width: 170px;
   white-space: nowrap;
   overflow: hidden;
-  line-height: 1;
 }
+
 ul.srTracks li .songName {
   font-weight: bold;
 }
+
 ul.srTracks li .artistName {
   font-weight: 400;
   font-size: 0.8rem;
@@ -1130,7 +1183,7 @@ ul.srTracks li a:hover div.hov {
 ul.topTrend span.artistName {
   font-size: .8rem;
   font-weight: normal;
-  color: rgba(255,255,255,.8);
+  color: rgba(255, 255, 255, .8);
 }
 
 .srArtists {
@@ -1148,4 +1201,9 @@ ul li .artist_icon {
   font-weight: bold;
   font-size: 0.9rem;
   color: #fff;
+}
+
+.srchHead {
+  font-size: 1.4rem;
+  padding: 10px 20px;
 }

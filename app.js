@@ -130,6 +130,9 @@ app.get('/play/album/:albumId/track/:trackId', passportConfig.isAuthenticated, t
 app.get('/play/album/:albumId', passportConfig.isAuthenticated, trackController.getAlbumTracks);
 app.get('/play/artist/:artistId', passportConfig.isAuthenticated, trackController.getArtistTracks);
 app.post('/search/:searchString', passportConfig.isAuthenticated, searchController.search);
+app.get('/search/:searchString', passportConfig.isAuthenticated, searchController.searchGet);
+app.post('/search/:category/:searchString', passportConfig.isAuthenticated, searchController.searchByCategory);
+app.get('/search/:category/:searchString', passportConfig.isAuthenticated, searchController.searchByCategoryGet);
 
 /**
  * Error Handler.
@@ -138,9 +141,9 @@ if (app.get('env') === 'development') {
   app.use(errorHandler())
 }
 
-app.use(function(req, res, next) {
-  res.status(404).redirect('/error')
-});
+// app.use(function(req, res, next) {
+//   res.status(404).redirect('/error')
+// });
 
 /**
  * Start Express server.
