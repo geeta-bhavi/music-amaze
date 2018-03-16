@@ -877,9 +877,14 @@ ul.topTrend li a:hover div.hov {
     font-size: 2rem;
     font-weight: bold;
     float: right;
-    padding: 10px;
+    padding: 10px 25px 10px 10px;
   }
-  #user-menu {
+  #user-menu.menuMod.show {
+    opacity: 1;
+    visibility: visible;
+    transition: all 0.3s ease-in-out;
+  }
+  #user-menu.menuMod {
     visibility: hidden;
     background: rgba(0, 0, 0, 1);
     height: 100%;
@@ -895,10 +900,10 @@ ul.topTrend li a:hover div.hov {
     z-index: 2;
     transition: 0.5s;
   }
-  #user-menu ul {
-    padding: 55px 0 0;
+  #user-menu.menuMod ul {
+    padding: 85px 0 0;
   }
-  #user-menu li {
+  #user-menu.menuMod li {
     border-bottom: 1px solid rgba(255, 255, 255, .2);
   }
 }
@@ -1035,16 +1040,18 @@ ul.topTrend li a:hover div.hov {
   font-weight: bold;
 }
 
-
 #trackRepeat:focus, #trackLike:focus, #trackNext:focus, #trackShuffle:focus {
   color: #fff;
 }
+
 #trackRepeat.active:focus, #trackRepeat.active, #trackShuffle.active:focus, #trackShuffle.active {
   color: rgba(210, 207, 31, 0.8);
 }
+
 #trackLike.active:focus, #trackLike.active {
   color: rgba(251, 74, 74, 0.8)
 }
+
 #trackPrev.inactive, #trackNext.inactive, #trackShuffle.inactive {
   color: rgba(204, 204, 204, 0.6);
   cursor: auto;
@@ -1206,4 +1213,75 @@ ul li .artist_icon {
 .srchHead {
   font-size: 1.4rem;
   padding: 10px 20px;
+}
+
+/**
+* Playlists
+*/
+
+section.playlist h3 {
+  font-weight: bold;
+  width: 100%;
+  padding: 20px 0;
+  text-align: center;
+}
+
+section.playlist h3::after {
+  content: "";
+  height: 2px;
+  background-color: #1db954;
+  width: 45px;
+  position: relative;
+  top: 4px;
+  display: block;
+  margin: 0 auto;
+}
+
+ul.playlist_list {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+ul.playlist_list li {
+  flex: 1 0 150px;
+  padding: 10px 10px 10px 47px;
+}
+
+@media only screen and (orientation: landscape) {
+  ul.playlist_list li {
+    flex: 1 0 200px;
+  }
+}
+
+ul.playlist_list li a {
+  display: inline-block;
+  position: relative;
+}
+ul.playlist_list li a:focus {
+  color:#fff;
+}
+
+ul.playlist_list li .create_icon {
+  position: relative;
+  background-color: #282828;
+  padding: 20px 20px 20px 30px;
+  border-radius: 5px;
+  width: 140px;
+  height: 140px;
+}
+
+ul.playlist_list li .fi-plus {
+  font-size: 3rem;
+  position: absolute;
+  left: 52px;
+  top: 31px;
+}
+
+ul li span.create_text {
+  font-weight: normal;
+  font-size: .9rem;
+  color: #fff;
+  width: 140px;
+  display: inline-block;
+  text-align: center;
 }

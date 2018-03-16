@@ -11,9 +11,14 @@
 <body>
   {{> header}}
 
+  <section class="clearfix js-nonSearchView playlist">
+    {{> playlist}}
+  </section>
+  
   <section class="clearfix js-nonSearchView topTrend">
     {{> topTrending}}
   </section>
+
   <section id="searchCont" class="hide js-searchView clearfix">
   </section>
   <div class="bodyBg"></div>

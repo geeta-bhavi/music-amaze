@@ -273,8 +273,7 @@ exports.searchByCategoryGet = (req, res, next) => {
   if (category === 'albums') {
     albums = getAlbums(searchString, 5000);
     albums.then((albums) => {
-      res.render('partials/search', {
-        layout: false,
+      res.render('user/home', {
         showTracks: 'hide',
         albums: albums,
         showAlbums: '',
@@ -291,8 +290,7 @@ exports.searchByCategoryGet = (req, res, next) => {
   if (category === 'artists') {
     artists = getArtists(searchString, 5000);
     artists.then((artists) => {
-      res.render('partials/search', {
-        layout: false,
+      res.render('user/home', {
         showTracks: 'hide',
         showAlbums: 'hide',
         artists: artists,

@@ -36,6 +36,10 @@ exports.getTopTrending = () => {
       include: [{
         model: Album,
         attributes: ['ALBUM_NAME', 'ALBUM_ART']
+      },
+      {
+        model: Artist,
+        attributes: ['STAGE_NAME']
       }],
       order: [
         ['NUMBER_OF_PLAYS', 'DESC'],
@@ -48,6 +52,7 @@ exports.getTopTrending = () => {
       var data = results.map((r) => {
         var obj = r.dataValues;
         obj.Album_NAME = r.Album.dataValues.ALBUM_NAME;
+        obj.ARTIST_NAME = r.Artist.dataValues.STAGE_NAME;
         return obj;
       });
       resolve(data);

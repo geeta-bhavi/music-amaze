@@ -148,6 +148,7 @@ $(function() {
   $('#trackPrev').on('click', playPrevious); /* play previous track */
   $('#trackNext').on('click', playNext); /* play next track */
   $('#trackShuffle').on('click', shuffleTracks); /* shuffle tracks*/
+  $('.playListCreate').on('click', createPlaylist); /* Create playlist */
   $(document).on('click', '.menuMode', showUserMenu);
   $(document).on('click', '.close-icon', hideUserMenu);
   $(document).on('click', '.seeAllR', seeAllResults); /* see all the tracks of search results */
@@ -167,12 +168,14 @@ $(function() {
     var width = $(window).width();
     if (width < 400) {
       $('.menuDiv').addClass('menuMode');
+      $('#user-menu').addClass('menuMod');
       $('#user-menu').removeClass('show');
     } else {
       $('#user-menu').removeClass('show');
       $('#user-menu').css('width', '180px');
       $('.close-icon').remove();
       $('.menuDiv').removeClass('menuMode');
+      $('#user-menu').removeClass('menuMod');
     }
   }
 
@@ -620,9 +623,11 @@ $(function() {
     const state = window.history.state;
     if (state.search !== undefined && state.category === undefined) {
       displaySearchBar();
+      $('#search-text').val(state.search);
       search(null, state.search, 'noPopstate');
     } else if (state.search !== undefined && state.category !== undefined) {
       displaySearchBar();
+      $('#search-text').val(state.search);
       seeAllResults(null, state.search, state.category, 'noPopstate');
     }
   }
@@ -640,9 +645,11 @@ $(function() {
       window.location.href = path;
     } else if (state.search !== undefined && state.category === undefined) {
       displaySearchBar(e);
+      $('#search-text').val(state.search);
       search(e, state.search, 'noPopstate');
     } else if (state.search !== undefined && state.category !== undefined) {
       displaySearchBar(e);
+      $('#search-text').val(state.search);
       seeAllResults(e, state.search, state.category, 'noPopstate');
     }
   });
@@ -675,6 +682,10 @@ $(function() {
   function linkActive(e) {
     e.preventDefault();
     $(this).toggleClass('active');
+  }
+
+  function createPlaylist(e) {
+    e.preventDefault();
   }
 
   /**

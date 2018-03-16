@@ -1,7 +1,7 @@
 <div class="grid-container">
   <div class="grid-x">
     {{#if album}}
-      <div class="small-12 medium-6 large-4 cell coverArt">
+      <div class="small-12 medium-offset-3 medium-6 large-offset-0 large-4 cell coverArt">
         <img onerror="this.src='/dist/assets/error.png'" src="/assets/cover/{{album.albumId}}.jpg" alt="{{album.albumName}}">
         <div class="audioP">
           <div class="players" id="player2-container">
@@ -23,7 +23,7 @@
         </div>
       </div>
 
-      <div class="small-12 medium-6 large-offset-1 large-6 cell albumDetails">
+      <div class="small-12 medium-12 large-offset-1 large-6 cell albumDetails">
 
         <div class="albumHeader">
           {{#unless artist}}
