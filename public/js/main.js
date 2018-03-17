@@ -54,7 +54,6 @@ $(function() {
             }
 
             liEle.click();
-            highLightPrevNext();
 
             //update play count
             // const trackId = $('li.trackList.highlight').attr('id');
@@ -71,11 +70,11 @@ $(function() {
             } else {
               if (liEle.length === 0) {
                 callFocus($('li.trackList').first());
+                highLightPrevNext();
               } else {
                 liEle.click();
               }
             }
-            highLightPrevNext();
           }
         });
       },
@@ -578,6 +577,7 @@ $(function() {
       mediaEle.setSrc(trackSrc);
       mediaEle.load();
       mediaEle.play();
+      highLightPrevNext();
       //history.pushState(trackId, '', path + trackId);
       const trackId = $(this).attr('id');
       updateNoOfPlays(trackId);
