@@ -205,7 +205,9 @@ exports.searchByCategory = (req, res, next) => {
  */
 
 exports.searchGet = (req, res, next) => {
-  const searchString = req.params.searchString;
+  var searchString = req.params.searchString;
+
+  searchString = decodeURIComponent(searchString);
 
   var tracks = getTracks(searchString, 8);
   var albums = getAlbums(searchString, 10);
@@ -247,8 +249,10 @@ exports.searchGet = (req, res, next) => {
  */
 
 exports.searchByCategoryGet = (req, res, next) => {
-  const searchString = req.params.searchString;
+  var searchString = req.params.searchString;
   const category = req.params.category;
+
+  searchString = decodeURIComponent(searchString);
 
   var tracks = '';
   var albums = '';

@@ -133,6 +133,8 @@ app.post('/search/:searchString', passportConfig.isAuthenticated, searchControll
 app.get('/search/:searchString', passportConfig.isAuthenticated, searchController.searchGet);
 app.post('/search/:category/:searchString', passportConfig.isAuthenticated, searchController.searchByCategory);
 app.get('/search/:category/:searchString', passportConfig.isAuthenticated, searchController.searchByCategoryGet);
+app.post('/update/playCount/:trackId', passportConfig.isAuthenticated, trackController.updatePlayCount);
+
 
 /**
  * Error Handler.

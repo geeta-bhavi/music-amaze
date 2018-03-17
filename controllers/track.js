@@ -308,3 +308,20 @@ exports.getArtistTracks = (req, res, next) => {
     });
   });
 }
+
+exports.updatePlayCount = (req, res, next) => {
+  const trackId = req.params.trackId;
+
+  Track.findById(trackId).then(track => {
+    track.NUMBER_OF_PLAYS = track.NUMBER_OF_PLAYS + 1;
+
+    track.save()
+      .then(() => {
+        res.send({
+          msg: 'Play count updated'
+        })
+      }).catch(err => {
+        res.send('Error updating play count');
+      });
+  });
+}

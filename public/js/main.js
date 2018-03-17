@@ -32,7 +32,13 @@ $(function() {
         highLightPrevNext();
 
         mediaEle.play();
-        //console.log(1);
+
+        $(mediaEle).on('playing', () => {
+          const trackId = $('li.trackList.highlight').attr('id');
+          updateNoOfPlays(trackId);
+          $(mediaEle).off('playing');
+
+        });
         $(mediaElement).on('ended', function() {
           if ($('#trackShuffle').hasClass('active')) {
             const liCount = $('li.trackList').length;
@@ -49,13 +55,19 @@ $(function() {
 
             liEle.click();
             highLightPrevNext();
-            // console.log(1);
+
+            //update play count
+            // const trackId = $('li.trackList.highlight').attr('id');
+            // updateNoOfPlays(trackId);
 
           } else {
             var liEle = $('li.trackList.highlight').next();
+
             if ($('#trackRepeat').hasClass('active')) {
               mediaElement.play();
-              // console.log(1);
+              //update play count
+              const trackId = $('li.trackList.highlight').attr('id');
+              updateNoOfPlays(trackId);
             } else {
               if (liEle.length === 0) {
                 callFocus($('li.trackList').first());
@@ -74,7 +86,13 @@ $(function() {
   }
 
   function updateNoOfPlays(trackId) {
-    $.post('')
+    $.post(`/update/playCount/${trackId}`)
+    .fail(function(data) {
+      console.log(data);
+    })
+    .done(function(data) {
+      console.log(data)
+    });
 
   }
 
@@ -132,10 +150,12 @@ $(function() {
     mediaEle.setSrc(trackSrc);
     mediaEle.load();
     //history.pushState(trackId, '', path + trackId);
-    // $(mediaEle).on('playing', () => {
-    //   console.log(1);
-    //   $(mediaEle).off('playing');
-    // })
+    $(mediaEle).on('playing', () => {
+      //update play count
+      const trackId = liEle.attr('id');
+      updateNoOfPlays(trackId);
+      $(mediaEle).off('playing');
+    })
   }
 
   /**
@@ -559,6 +579,8 @@ $(function() {
       mediaEle.load();
       mediaEle.play();
       //history.pushState(trackId, '', path + trackId);
+      const trackId = $(this).attr('id');
+      updateNoOfPlays(trackId);
     }
 
   }
@@ -610,6 +632,8 @@ $(function() {
     $('.js-searchView').empty();
     var searchString = (str !== undefined) ? str : $.trim($('#search-text').val()); /* trim beginning and ending spaces */
     searchString = searchString.replace(/\s+/g, ' ');
+    searchString = encodeURIComponent(searchString);
+
     if (searchString.length > 0 && searchString !== ' ') {
       $.post(`/search/${searchString}`)
         .fail(function(data) {
@@ -622,15 +646,15 @@ $(function() {
           if (popstate === undefined) {
             const str = `/search/${searchString}`;
             history.pushState({
-              search: searchString
+              search: decodeURIComponent(searchString)
             }, '', str);
           }
         });
     }
   }
 
-  console.log(window.history.state);
-  console.log(window.history);
+  // console.log(window.history.state);
+  // console.log(window.history);
 
   if (window.history.state !== null) {
     const state = window.history.state;
@@ -671,8 +695,10 @@ $(function() {
       e.preventDefault();
     }
 
-    const searchStr = (srchStr !== undefined) ? srchStr : $('.searchStr').html();
+    var searchStr = (srchStr !== undefined) ? srchStr : $('.searchStr').html();
     const category = (categry !== undefined) ? categry : $(this).data('category');
+
+    searchStr = encodeURIComponent(searchStr);
 
     $.post(`/search/${category}/${searchStr}`)
       .fail(function(data) {
@@ -684,7 +710,7 @@ $(function() {
         if (popstate === undefined) {
           const str = `/search/${category}/${searchStr}`;
           history.pushState({
-            search: searchStr,
+            search: decodeURIComponent(searchStr),
             category: category
           }, '', str);
         }
