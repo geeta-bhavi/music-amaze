@@ -991,7 +991,7 @@ ul.topTrend li a:hover div.hov {
 }
 
 .trackList div.trackItem {
-  flex: 1 0 250px;
+  /* flex: 1 0 250px; */
   position: relative;
 }
 

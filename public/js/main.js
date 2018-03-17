@@ -31,7 +31,8 @@ $(function() {
         mediaEle = mediaElement;
         highLightPrevNext();
 
-        //mediaEle.play();
+        mediaEle.play();
+        //console.log(1);
         $(mediaElement).on('ended', function() {
           if ($('#trackShuffle').hasClass('active')) {
             const liCount = $('li.trackList').length;
@@ -48,11 +49,13 @@ $(function() {
 
             liEle.click();
             highLightPrevNext();
+            // console.log(1);
 
           } else {
             var liEle = $('li.trackList.highlight').next();
             if ($('#trackRepeat').hasClass('active')) {
               mediaElement.play();
+              // console.log(1);
             } else {
               if (liEle.length === 0) {
                 callFocus($('li.trackList').first());
@@ -68,6 +71,11 @@ $(function() {
         alert('There is some error at the server playing the track!');
       }
     });
+  }
+
+  function updateNoOfPlays(trackId) {
+    $.post('')
+
   }
 
   function shuffleTracks(e) {
@@ -124,6 +132,10 @@ $(function() {
     mediaEle.setSrc(trackSrc);
     mediaEle.load();
     //history.pushState(trackId, '', path + trackId);
+    // $(mediaEle).on('playing', () => {
+    //   console.log(1);
+    //   $(mediaEle).off('playing');
+    // })
   }
 
   /**
@@ -534,6 +546,7 @@ $(function() {
 
   function changeTrack(e) {
     if (!$(this).hasClass('highlight')) {
+      // console.log(1);
       $('.trackList').removeClass('highlight');
       $('.trackItem').removeClass('fi-sound');
       $(this).addClass('highlight');
@@ -637,7 +650,6 @@ $(function() {
    */
 
   $(window).on('popstate', function(e) {
-    console.log(e);
     const state = e.originalEvent.state;
 
     if (state === null) {
