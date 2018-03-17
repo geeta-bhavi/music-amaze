@@ -3,15 +3,19 @@ const expect = require('expect');
 const sinon = require('sinon');
 const User = require('../models/User');
 const app = require('../app');
+const searchStr = 'sa';
+const albumId = 272;
+const trackId = 396;
+const artistId = 34;
 
 
 const user = {
-  userId: 1013,
+  userId: 1016,
   username: 'test',
   password: 'test123'
 };
 const inValidUser = {
-  userId: 1013,
+  userId: 1016,
   username: 'test',
   password: 'test12'
 };
@@ -26,7 +30,6 @@ describe('Authenticated Get tests', () => {
       .end(function(err, res) {
         if (err) throw err;
         cookie = res.headers['set-cookie'];
-        console.log(cookie)
         done();
       });
   });
@@ -53,6 +56,42 @@ describe('Authenticated Get tests', () => {
     it('should return 200 OK', (done) => {
       request(app)
         .get('/user/changePassword')
+        .set('cookie', cookie)
+        .expect(200, done);
+    });
+  });
+
+  describe(`GET /search/${searchStr}`, () => {
+    it('should return 200 OK', (done) => {
+      request(app)
+        .get('/search/${searchStr}')
+        .set('cookie', cookie)
+        .expect(200, done);
+    });
+  });
+
+  describe(`GET /search/tracks/${searchStr}`, () => {
+    it('should return 200 OK', (done) => {
+      request(app)
+        .get('/search/tracks/${searchStr}')
+        .set('cookie', cookie)
+        .expect(200, done);
+    });
+  });
+
+  describe(`GET /search/artists/${searchStr}`, () => {
+    it('should return 200 OK', (done) => {
+      request(app)
+        .get('/search/artists/${searchStr}')
+        .set('cookie', cookie)
+        .expect(200, done);
+    });
+  });
+
+  describe(`GET /search/albums/${searchStr}`, () => {
+    it('should return 200 OK', (done) => {
+      request(app)
+        .get('/search/albums/${searchStr}')
         .set('cookie', cookie)
         .expect(200, done);
     });
@@ -129,13 +168,13 @@ describe('POST /user/editProfile', () => {
   var cookie = null;
 
   const alreadyExistingEmail = {
-    userId: 1013,
+    userId: 1016,
     email: 'olive@gmail.com',
     username: 'test'
   }
 
   const alreadyExistingName = {
-    userId: 1013,
+    userId: 1016,
     email: 'test@gmail.com',
     username: 'olive'
   }

@@ -63,7 +63,7 @@ const getAlbums = (searchString, limit) => {
 }
 
 /**
- * getTracks method
+ * getArtists method
  */
 
 const getArtists = (searchString, limit) => {

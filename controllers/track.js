@@ -234,14 +234,14 @@ exports.getAlbumTracks = (req, res, next) => {
   var auth = getAuth();
   auth.then((authObj) => {
     var cookie = req.cookies.auth;
-    console.log(req.cookies.auth);
+    // console.log(req.cookies.auth);
     if (cookie === undefined) {
       res.cookie('auth', authObj.auth, {
         maxAge: authObj.maxAge,
         httpOnly: true
       });
     } else {
-      console.log('cookie exists', cookie);
+      // console.log('cookie exists', cookie);
     }
     var tracks = getTracks(albumId, trackId, authObj.auth);
     tracks.then((albumTracks) => {

@@ -141,9 +141,9 @@ if (app.get('env') === 'development') {
   app.use(errorHandler())
 }
 
-// app.use(function(req, res, next) {
-//   res.status(404).redirect('/error')
-// });
+app.use(function(req, res, next) {
+  res.status(404).redirect('/error')
+});
 
 /**
  * Start Express server.
