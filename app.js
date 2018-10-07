@@ -40,6 +40,10 @@ filenames.forEach(function(filename) {
   var template = fs.readFileSync(partialsDir + '/' + filename, 'utf8');
   hbs.registerPartial(name, template);
 });
+
+hbs.registerHelper("inc", function(value, options) {
+    return parseInt(value) + 1;
+});
 /**
  * Controllers (route handlers).
  */
@@ -47,10 +51,13 @@ const indexController = require('./controllers/index');
 const userController = require('./controllers/user');
 const trackController = require('./controllers/track');
 const searchController = require('./controllers/search');
+const playlistController = require('./controllers/playlist');
+const concertController = require('./controllers/concert');
+const statController = require('./controllers/stats');
 
 
 /**
- * Passport configuration.
+ * Passport and redis configuration.
  */
 const passportConfig = require('./config/passport');
 
@@ -121,19 +128,61 @@ app.post('/forgotPassword', userController.postForgot);
 app.post('/verifyUser', userController.postVerifyUser)
 app.get('/signup', userController.getSignup);
 app.post('/signup', userController.postSignup);
+app.get('/about', indexController.getDev);
 app.get('/user/home', passportConfig.isAuthenticated, userController.getUserHome);
 app.get('/user/editProfile', passportConfig.isAuthenticated, userController.getEditProfile);
 app.post('/user/editProfile', passportConfig.isAuthenticated, userController.postEditProfile);
 app.get('/user/changePassword', passportConfig.isAuthenticated, userController.getChangePassword);
 app.post('/user/changePassword', passportConfig.isAuthenticated, userController.postChangePassword);
+app.post('/user/playlists', passportConfig.isAuthenticated, userController.getUserPlaylists);
 app.get('/play/album/:albumId/track/:trackId', passportConfig.isAuthenticated, trackController.getAlbumTracks);
 app.get('/play/album/:albumId', passportConfig.isAuthenticated, trackController.getAlbumTracks);
 app.get('/play/artist/:artistId', passportConfig.isAuthenticated, trackController.getArtistTracks);
+app.post('/play/playlist/:playlistId', passportConfig.isAuthenticated, playlistController.getPlaylistTrackCount);
+app.get('/play/playlist/:playlistId', passportConfig.isAuthenticated, playlistController.getPlaylistTracks);
 app.post('/search/:searchString', passportConfig.isAuthenticated, searchController.search);
 app.get('/search/:searchString', passportConfig.isAuthenticated, searchController.searchGet);
 app.post('/search/:category/:searchString', passportConfig.isAuthenticated, searchController.searchByCategory);
 app.get('/search/:category/:searchString', passportConfig.isAuthenticated, searchController.searchByCategoryGet);
 app.post('/update/playCount/:trackId', passportConfig.isAuthenticated, trackController.updatePlayCount);
+app.post('/user/likeUnlike', passportConfig.isAuthenticated, trackController.updateUserLikes);
+app.post('/user/dislikeUndislike', passportConfig.isAuthenticated, trackController.updateUserDisLikes);
+app.post('/user/createPlaylist', passportConfig.isAuthenticated, userController.createPlaylist);
+app.post('/user/deletePlaylist', passportConfig.isAuthenticated, userController.deletePlaylist);
+app.post('/user/editPlaylistname', passportConfig.isAuthenticated, userController.editPlaylistname);
+app.post('/user/playlists/seeAll', passportConfig.isAuthenticated, userController.seeAllPlaylists);
+app.get('/user/playlists/seeAll', passportConfig.isAuthenticated, userController.seeAllPlaylistsGet);
+app.post('/user/playlist/addtracktoplaylist', passportConfig.isAuthenticated, userController.addToUserPlaylist);
+app.post('/user/playlist/deleteTrack', passportConfig.isAuthenticated, userController.deleteFromUserPlaylist);
+app.get('/user/recommendations/seeAll', passportConfig.isAuthenticated, userController.seeAllRecommendations);
+app.post('/user/recommendations/seeAll', passportConfig.isAuthenticated, userController.seeAllRecommendations);
+app.get('/user/topTrending/seeAll', passportConfig.isAuthenticated, userController.seeAllTrending);
+app.post('/user/topTrending/seeAll', passportConfig.isAuthenticated, userController.seeAllTrending);
+app.get('/user/mostPlayed/seeAll', passportConfig.isAuthenticated, userController.seeAllPlayed);
+app.post('/user/mostPlayed/seeAll', passportConfig.isAuthenticated, userController.seeAllPlayed);
+app.get('/play/top50', passportConfig.isAuthenticated, trackController.getTop50);
+app.get('/play/mostPlayed', passportConfig.isAuthenticated, userController.getMostPlayed);
+app.get('/searchconcert', passportConfig.isAuthenticated, concertController.getConcertPage);
+app.post('/searchconcert', passportConfig.isAuthenticated, concertController.postConcertSearch);
+app.post('/searchconcert/findConcertsOfArtist', passportConfig.isAuthenticated, concertController.getConcertsOfArtist);
+app.post('/searchconcert/findConcertsOfLocation', passportConfig.isAuthenticated, concertController.getConcertsOfLocation);
+app.post('/play/playlistChange/rearrangeData', passportConfig.isAuthenticated, playlistController.rearrangePlaylistracks);
+app.get('/stats', passportConfig.isAuthenticated, statController.getStats);
+app.get('/payment', passportConfig.isAuthenticated, statController.getPayment);
+app.post('/payment', passportConfig.isAuthenticated, statController.postPayment);
+app.post('/searchstat', passportConfig.isAuthenticated, statController.getStatSearch);
+app.post('/statresults', passportConfig.isAuthenticated, statController.getStatResults);
+app.get('/play/mostPlayedByAll', passportConfig.isAuthenticated, trackController.getMostPlayedByAll);
+app.get('/play/mostLikedByAll', passportConfig.isAuthenticated, trackController.getMostLikedByAll);
+
+
+
+
+/**
+* TODO: Please remove this later
+*/
+app.get('/feedRaccoon', passportConfig.isAuthenticated, trackController.feedRaccoon);
+app.get('/getRaccoon', passportConfig.isAuthenticated, trackController.getRaccoon);
 
 
 /**

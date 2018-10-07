@@ -1,0 +1,21 @@
+<div class="grid-container">
+  <div class="grid-x">
+    <div class="small-12 medium-12 large-12 cell artistRes">
+      <div class="albumHeader clearfix">
+          <div class="artistName">
+            {{artistName}}
+          </div>
+      </div>
+      <ul class="concert-artists concert-res">
+        {{#each events}}
+          <li>
+            <span class="artistName">{{displayName}}</span>
+            <span class="button warning {{status}}">{{status}}</span>
+            <span class="city">{{location.city}}</span>
+            <a class="button primary" target="_blank" href="{{uri}}">Buy Tickets</a>
+          </li>
+        {{/each}}
+      </ul>
+    </div>
+  </div>
+</div>

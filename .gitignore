@@ -40,3 +40,4 @@ db/
 db/musicamaze_db.sql
 /public/dist/
 /node_modules/
+dump.rdb

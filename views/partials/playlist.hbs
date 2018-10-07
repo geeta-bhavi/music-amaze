@@ -1,15 +1,88 @@
-<div class="grid-container">
-  <div class="grid-x">
-    <h3>Playlists</h3>
-    <ul class="small-12 medium-12 large-12 cell playlist_list">
-      <li>
-        <a class="playListCreate" title="Create Playlist" href="#">
-          <div class="create_icon">
-            <i class="fi-plus"></i>
-          </div>
-          <span class="create_text">Create Playlist</span>
-        </a>
-      </li>
-    </ul>
+<div class="playlist_cont">
+  <div class="grid-container">
+    <div class="grid-x">
+      <h3>Playlists <span class="{{seeAllPlaylists}} seeAll"><a class="seeAllPlaylists" data-category="playlists" href="#">(See All)</a></span><span id="playlistTrackError"></span></h3>
+      <ul class="small-12 medium-12 large-12 cell playlist_list playlistHome">
+        <li id="createPlaylistLi">
+          <a class="playListCreate" href="#">
+            <div class="create_icon">
+              <i class="fi-plus"></i>
+            </div>
+            <span class="create_text">Create Playlist</span>
+          </a>
+        </li>
+        {{#each playlists}}
+          <li id={{PLAYLIST_ID}}>
+            <a href="#">
+              <div class="playImage">
+                <img onerror="this.src='/dist/assets/error.png'" src="/assets/cover/{{albumId}}.jpg" alt="{{PLAYLIST_NAME}}">
+              </div>
+              <span class="playlistName">{{PLAYLIST_NAME}}</span>
+              <div class="hov"></div>
+              <div class="playListOptions">
+                <button data-playlist-id={{PLAYLIST_ID}} class="playlistPlay cover-art-playback"><svg class="icon-play" viewBox="0 0 85 100"><path fill="currentColor" d="M81 44.6c5 3 5 7.8 0 10.8L9 98.7c-5 3-9 .7-9-5V6.3c0-5.7 4-8 9-5l72 43.3z"><title>PLAY</title></path></svg></button>
+                <!-- <span data-playlist-id={{PLAYLIST_ID}} class="editPlaylistName"><i class="fi-pencil"> Edit</i></span>
+                <span data-playlist-id={{PLAYLIST_ID}} class="deletePlaylist"><i class="fi-x"> Delete</i></span> -->
+              </div>
+              <div class="menu-popup-cont">
+                <div class="playlist-manage text-center">&#8286;</div>
+                <div class="menu-popup playlist-actions">
+                  <span data-playlist-id={{PLAYLIST_ID}} class="editPlaylistName"><i class="fi-pencil playlistManage"> Edit</i></span>
+                  <span data-playlist-id={{PLAYLIST_ID}} class="deletePlaylist"><i class="fi-x playlistManage"> Delete</i></span>
+                </div>
+              </div>
+            </a>
+          </li>
+        {{/each}}
+      </ul>
+    </div>
+  </div>
+  <div class="playListPopup">
+    <div class="cont">
+      <button class="closebutton" type="button">
+        <span aria-hidden="true">×</span>
+      </button>
+      <div class="createPlaylistInp">
+        <input type="text" placeholder="Playlist name" id="playlistName" />
+      </div>
+      <div class="createbtns">
+        <button id="createBtn" class="button primary">Create</button>
+        <button id="cancelBtn" class="button primary">Cancel</button>
+      </div>
+      <div id="emptyFields" class="hide text-center">This field is required</div>
+      <div id="error"></div>
+    </div>
+  </div>
+
+  <div class="deletePlaylistPopup">
+    <div class="cont">
+      <button class="closeDelete" type="button">
+        <span aria-hidden="true">×</span>
+      </button>
+      <h4>Do you really want to delete this playlist</h4>
+      <div class="createbtns">
+        <button id="deleteBtn" class="button primary">Delete</button>
+        <button id="cancelDeleteBtn" class="button primary">Cancel</button>
+      </div>
+      <div id="playListerror"></div>
+    </div>
+  </div>
+
+  <div class="editPlaylistPopup">
+    <div class="cont">
+      <button class="closeEdit" type="button">
+        <span aria-hidden="true">×</span>
+      </button>
+      <h4>Edit playlist name</h4>
+      <div class="editPlaylistInp">
+        <input type="text" placeholder="Playlist name" id="editplaylistName" />
+      </div>
+      <div class="createbtns">
+        <button id="editBtn" class="button primary">Edit</button>
+        <button id="cancelEditBtn" class="button primary">Cancel</button>
+      </div>
+      <div id="emptyField" class="hide text-center">This field is required</div>
+      <div id="editPlaylistError"></div>
+    </div>
   </div>
 </div>

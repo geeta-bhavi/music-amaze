@@ -115,11 +115,15 @@ exports.search = (req, res, next) => {
         layout: false,
         songs: songs,
         showTracks: showTracks,
+        showTracksTab: showTracks,
         albums: albums,
         showAlbums: showAlbums,
+        showAlbumsTab: showAlbums,
         artists: artists,
         showArtists: showArtists,
+        showArtistsTab: showArtists,
         searchStr: searchString,
+        searchHome: 'active',
         seeAllTracks: (songs.length < 8) ? 'hide' : '',
         seeAllAlbums: (albums.length < 10) ? 'hide' : '',
         seeAllArtists: (artists.length < 10) ? 'hide' : ''
@@ -128,7 +132,7 @@ exports.search = (req, res, next) => {
 
   }, (errorMessage) => {
     //not able to get tracks
-    res.status(500).send(errorMessage);
+    return res.status(500).send({msg: errorMessage});
   });
 }
 
@@ -152,6 +156,7 @@ exports.searchByCategory = (req, res, next) => {
         layout: false,
         songs: tracks,
         showTracks: '',
+        searchTrack: 'active',
         showAlbums: 'hide',
         showArtists: 'hide',
         searchStr: searchString,
@@ -159,7 +164,7 @@ exports.searchByCategory = (req, res, next) => {
       });
     }, (errorMessage) => {
       //not able to get tracks
-      res.status(500).send(errorMessage);
+      return res.status(500).send({msg: errorMessage});
     });
   }
   if (category === 'albums') {
@@ -170,13 +175,14 @@ exports.searchByCategory = (req, res, next) => {
         showTracks: 'hide',
         albums: albums,
         showAlbums: '',
+        searchAlbum: 'active',
         showArtists: 'hide',
         searchStr: searchString,
         seeAllAlbums: 'hide'
       });
     }, (errorMessage) => {
       //not able to get albums
-      res.status(500).send(errorMessage);
+      return res.status(500).send({msg: errorMessage});
     });
 
   }
@@ -189,12 +195,13 @@ exports.searchByCategory = (req, res, next) => {
         showAlbums: 'hide',
         artists: artists,
         showArtists: '',
+        searchArtists: 'active',
         searchStr: searchString,
         seeAllArtists: 'hide'
       });
     }, (errorMessage) => {
       //not able to get artists
-      res.status(500).send(errorMessage);
+      return res.status(500).send({msg: errorMessage});
     });
   }
 }
@@ -224,6 +231,8 @@ exports.searchGet = (req, res, next) => {
       res.send(`<h3 class="text-center">No matches found for "<span class='searchStr'>${searchString}</span>"</h3>`);
     } else {
       res.render('user/home', {
+        title: 'Music Home - Music Amaze',
+        userName: req.user.username,
         songs: songs,
         showTracks: showTracks,
         albums: albums,
@@ -231,6 +240,7 @@ exports.searchGet = (req, res, next) => {
         artists: artists,
         showArtists: showArtists,
         searchStr: searchString,
+        searchHome: 'active',
         seeAllTracks: (songs.length < 8) ? 'hide' : '',
         seeAllAlbums: (albums.length < 10) ? 'hide' : '',
         seeAllArtists: (artists.length < 10) ? 'hide' : ''
@@ -239,7 +249,7 @@ exports.searchGet = (req, res, next) => {
 
   }, (errorMessage) => {
     //not able to get tracks
-    res.status(500).send(errorMessage);
+    return res.status(500).send({msg: errorMessage});
   });
 }
 
@@ -262,8 +272,11 @@ exports.searchByCategoryGet = (req, res, next) => {
     tracks = getTracks(searchString, 5000);
     tracks.then((tracks) => {
       res.render('user/home', {
+        title: 'Music Home - Music Amaze',
+        userName: req.user.username,
         songs: tracks,
         showTracks: '',
+        searchTrack: 'active',
         showAlbums: 'hide',
         showArtists: 'hide',
         searchStr: searchString,
@@ -271,23 +284,26 @@ exports.searchByCategoryGet = (req, res, next) => {
       });
     }, (errorMessage) => {
       //not able to get tracks
-      res.status(500).send(errorMessage);
+      return res.status(500).send({msg: errorMessage});
     });
   }
   if (category === 'albums') {
     albums = getAlbums(searchString, 5000);
     albums.then((albums) => {
       res.render('user/home', {
+        title: 'Music Home - Music Amaze',
+        userName: req.user.username,
         showTracks: 'hide',
         albums: albums,
         showAlbums: '',
+        searchAlbum: 'active',
         showArtists: 'hide',
         searchStr: searchString,
         seeAllAlbums: 'hide'
       });
     }, (errorMessage) => {
       //not able to get albums
-      res.status(500).send(errorMessage);
+      return res.status(500).send({msg: errorMessage});
     });
 
   }
@@ -295,16 +311,19 @@ exports.searchByCategoryGet = (req, res, next) => {
     artists = getArtists(searchString, 5000);
     artists.then((artists) => {
       res.render('user/home', {
+        title: 'Music Home - Music Amaze',
+        userName: req.user.username,
         showTracks: 'hide',
         showAlbums: 'hide',
         artists: artists,
         showArtists: '',
+        searchArtists: 'active',
         searchStr: searchString,
         seeAllArtists: 'hide'
       });
     }, (errorMessage) => {
       //not able to get artists
-      res.status(500).send(errorMessage);
+      return res.status(500).send({msg: errorMessage});
     });
   }
 }

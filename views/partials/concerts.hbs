@@ -1,0 +1,16 @@
+<div class="grid-container">
+  <div class="grid-x">
+    <div class="small-12 medium-12 large-12 cell artistRes">
+      <button class="button primary artistHd">Events</button>
+
+      <ul class="concert-artists">
+        {{#each events}}
+          <li id= {{Id}}>
+            <span class="artistName">{{Date}}</span>
+            <span class="artistName">{{Venue.Name}}</span>
+          </li>
+        {{/each}}
+      </ul>
+    </div>
+  </div>
+</div>

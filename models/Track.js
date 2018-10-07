@@ -1,6 +1,7 @@
 const Sequelize = require('sequelize');
 const Album = require('./Album');
 const Artist = require('./Artist');
+const User_Statistics = require('./User_Statistics');
 
 /**
  * Load sequelize handle
@@ -93,6 +94,15 @@ const schemaDefinition = {
       this.setDataValue('LIKES', val);
     }
   },
+  DISLIKES: {
+    type: Sequelize.BIGINT,
+    get() {
+      return this.getDataValue('LIKES');
+    },
+    set(val) {
+      this.setDataValue('LIKES', val);
+    }
+  },
   ARTIST_ID: {
     type: Sequelize.INTEGER,
     get() {
@@ -127,5 +137,6 @@ const Track = sequelizeHandle.define('Track', schemaDefinition);
 
 Track.belongsTo(Album, {foreignKey: 'ALBUM_ID'});
 Track.belongsTo(Artist, {foreignKey: 'ARTIST_ID'});
+Track.hasOne(User_Statistics, {foreignKey: 'TRACK_ID'});
 
 module.exports = Track;

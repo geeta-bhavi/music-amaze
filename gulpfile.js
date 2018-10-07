@@ -8,6 +8,7 @@ const plumber = require('gulp-plumber');
 const sourcemaps = require('gulp-sourcemaps');
 const babel = require('gulp-babel');
 const del = require('del');
+const child_process = require('child_process');
 
 // image compression
 const imagemin = require('gulp-imagemin');
@@ -101,6 +102,15 @@ gulp.task('templates', function() {
 
 });
 
+gulp.task('redis-start', function() {
+  child_process.exec('redis-server', function(err, stdout, stderr) {
+    console.log(stdout);
+    if (err !== null) {
+      console.log('exec error: ' + err);
+    }
+  });
+});
+
 gulp.task('clean', function() {
   return del.sync([
     DIST_PATH,
@@ -108,7 +118,7 @@ gulp.task('clean', function() {
   ])
 });
 
-gulp.task('default', ['clean', 'images', 'templates', 'styles', 'scripts'], () => {
+gulp.task('default', ['clean', 'images', 'templates', 'styles', 'scripts', 'redis-start'], () => {
   console.log('Starting default task');
 });
 
@@ -119,4 +129,5 @@ gulp.task('watch', ['default'], () => {
   gulp.watch(TEMPLATES_PATH, ['templates']);
   gulp.watch(SCRIPTS_PATH, ['scripts']);
   gulp.watch(CSS_PATH, ['styles']);
+  gulp.watch(IMAGES_PATH, ['images']);
 });

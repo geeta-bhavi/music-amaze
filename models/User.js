@@ -52,6 +52,24 @@ const schemaDefinition = {
     set(val) {
       this.setDataValue('password', val);
     }
+  },
+  paid: {
+    type: Sequelize.TINYINT,
+    get() {
+      return this.getDataValue('paid');
+    },
+    set(val) {
+      this.setDataValue('paid', val);
+    }
+  },
+  paymentdate: {
+    type: Sequelize.DATE,
+    get() {
+      return this.getDataValue('paymentdate');
+    },
+    set(val) {
+      this.setDataValue('paymentdate', val);
+    }
   }
 }
 
@@ -84,7 +102,7 @@ function hashPassword(user, options) {
 
   return new Promise(function(resolve, reject) {
     bcrypt.genSalt(saltRounds, (err, salt) => {
-      
+
       if (err) { reject(err); }
 
       bcrypt.hash(user.password, salt, (err, hash) => {

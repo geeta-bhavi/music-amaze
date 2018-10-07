@@ -1,0 +1,141 @@
+/**
+* Reset styles
+*/
+
+*, *:after, *:before {
+  box-sizing: border-box;
+}
+
+a {
+  text-decoration: none;
+}
+
+article, aside, details, figcaption, figure, footer, header, hgroup, nav, section, summary {
+  display: block;
+}
+
+audio, canvas, video {
+  display: inline-block;
+}
+
+audio:not([controls]) {
+  display: none;
+  height: 0;
+}
+
+[hidden] {
+  display: none;
+}
+
+@font-face {
+  font-family: GothamSSm;
+  src: url(../fonts/GothamSSm-Book.ttf);
+}
+
+html {
+  margin: 0;
+  padding: 0;
+}
+
+@font-face {
+  font-family: GothamSSm;
+  src: url(../fonts/GothamSSm-Book.ttf);
+}
+
+html {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'GothamSSm', Arial, Georgia, serif;
+  background: #7f574f;
+  color: #fff;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+dl, menu, ol, ul {
+  margin: 0;
+  list-style: none;
+}
+
+dd {
+  margin: 0;
+}
+
+menu, ol, ul {
+  padding: 0;
+}
+
+nav ul, nav ol {
+  list-style: none;
+  list-style-image: none;
+}
+
+img {
+  border: 0;
+}
+
+/**
+* Common styles
+*/
+
+html {
+  font-size: 62.5%;
+}
+
+@media screen and (max-width: 1680px) {
+  html {
+    font-size: 12pt;
+  }
+}
+
+@media screen and (max-width: 1280px) {
+  html {
+    font-size: 11pt;
+  }
+}
+
+@media screen and (max-width: 360px) {
+  html {
+    font-size: 10pt;
+  }
+}
+
+/**
+* page styles
+*/
+
+div.devBg {
+  background-image: url(/dist/assets/dev.jpg);
+  width: 50%;
+  height: 100%;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: 100% 100%;
+  background-color: #fcfeff;
+  right: 0;
+  top: 0;
+  position: fixed;
+  will-change: transform;
+  z-index: -1;
+}
+
+.devImg {
+  width: 100px;
+  border-radius: 50%;
+  float: left;
+  margin-right: 30px;
+}
+
+.dev-cont {
+  padding: 35px 0;
+}
+
+.bio {
+  font-size: 0.9rem;
+  position: relative;
+  top: 26px;
+}

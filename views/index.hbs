@@ -10,45 +10,55 @@
 </head>
 
 <body class="index clearfix">
-  <header id="header" class="withoutTitle">
-    <h1 class="hide">{{header}}</h1>
-    <a class="logo logoImg" href="/"><span class="title">{{header}}</span></a>
 
-    <div class="title-bar" data-responsive-toggle="index-menu" data-hide-for="medium">
-      <button class="menu-icon" type="button" data-toggle></button>
-      <div class="title-bar-title">Menu</div>
+  <section>
+    <div class="grid-container">
+      <div class="grid-x">
+        <div class="small-offset-1 small-10 medium-offset-1 medium-10 large-offset-1 large-10 cell homeCont">
+
+          <div class="homeLogo">
+            <span class="logoImg"></span>
+            <span class="title">{{header}}</span>
+          </div>
+
+          <div class="homeSlide clearfix">
+            <div class="cont text-center">
+              <span class="slideHeader">Welcome</span>
+              <span class="slideContent">Sign up for free music on your phone, tablet and computer.</span>
+            </div>
+            <div class="cont text-center">
+              <span class="slideHeader">Browse</span>
+              <span class="slideContent">Explore top tracks, most played and most liked.</span>
+            </div>
+            <div class="cont text-center">
+              <span class="slideHeader">Search</span>
+              <span class="slideContent">Looking for that special album or artist? Just search and hit play.</span>
+            </div>
+            <div class="cont text-center">
+              <span class="slideHeader">Your Playlist</span>
+              <span class="slideContent">Save any song to your own music collection.</span>
+            </div>
+          </div>
+
+
+
+          <div class="indexBtns text-center clearfix">
+            <span class="btncont">
+              <a class="button success" href="/signup">Create Account</a>
+            </span>
+            <span class="loginCont btncont">
+                <span class="aluser">Already an user?</span>
+                <a class="button custom" href="/login">Log In</a>
+            </span>
+          </div>
+        </div>
+
     </div>
-
-    <div id="index-menu" class="index clearfix addFloat">
-      <div class="top-bar-right">
-        <ul class="dropdown menu vertical medium-horizontal" data-dropdown-menu>
-          <li><a href="/login" title="Sign In">Sign In</a></li>
-          <li><a href="/signup" title="Sign Up">Sign Up</a></li>
-        </ul>
-      </div>
-    </div>
-  </header>
-  <div class="screenText clearfix">
-    <div class="sli1">Stream. Explore. Sign up for free.</div>
-    <div class="sli2">
-      <h4>$0.00 <span class="month"> / month</span></h4>
-      <div class="features">
-        <ul class="spotify-premium-list">
-          <li>Shuffle play</li>
-          <li>Ad free</li>
-          <li>Unlimited skips</li>
-          <li>Play any track</li>
-          <li>High quality audio</li>
-        </ul>
-      </div>
-    </div>
-
-
-
-
   </div>
+  </section>
+
   <!-- <div class="bg fixed clearfix"></div> -->
-  <div class="bodyBg"></div>
+  <div class="bodyBg bodyBgHome"></div>
   {{> footer}} {{> scripts}}
 </body>
 

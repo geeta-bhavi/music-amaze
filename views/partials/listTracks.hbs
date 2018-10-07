@@ -1,7 +1,7 @@
 <div class="grid-container">
   <div class="grid-x">
     {{#if album}}
-      <div class="small-12 medium-offset-3 medium-6 large-offset-0 large-4 cell coverArt">
+      <div class="small-12 medium-offset-2 medium-7 large-offset-0 large-4 cell coverArt">
         <img onerror="this.src='/dist/assets/error.png'" src="/assets/cover/{{album.albumId}}.jpg" alt="{{album.albumName}}">
         <div class="audioP">
           <div class="players" id="player2-container">
@@ -20,12 +20,11 @@
           <span><a id="trackNext" href="#"><i class="fi-next"></i></i></a></span>
           <span><a id="trackPlaylist" href="#"><i class="fi-plus"></i></a></span>
           <span><a id="trackLike" href="#"><i class="fi-heart"></i></a></span>
+          <span><a id="trackDislike" href="#"><i class="fi-dislike"></i></a></span>
         </div>
       </div>
-
       <div class="small-12 medium-12 large-offset-1 large-6 cell albumDetails">
-
-        <div class="albumHeader">
+        <div class="albumHeader clearfix">
           {{#unless artist}}
             <div class="albumName">
               {{album.albumName}}
@@ -41,29 +40,87 @@
               {{album.yearReleased}}
             </span>
           {{/unless}}
-          {{#if artist}}
+          {{#if artist.artistName}}
             <div class="artist-name">{{artist.artistName}}</div>
+          {{/if}}
+          {{#if playlistName}}
+            <div class="playlist-name" data-playlist-id="{{playlistId}}">{{playlistName}}</div>
+            <div class="editPlaylist">Edit</div>
+          {{/if}}
+          {{#if chartName}}
+            <div class="playlist-name">{{chartName}}</div>
           {{/if}}
         </div>
         <ul id="tracks">
           {{#each albumTracks}}
-            <li class="trackList {{highlight}}" id="{{TRACK_ID}}" data-track-src="{{TRACK_SOURCE}}">
+            <li class="trackList {{highlight}}" id="{{TRACK_ID}}" data-track-src="{{TRACK_SOURCE}}" data-like="{{like}}" data-dislike="{{dislike}}">
               <div class="trackItem {{soundIcon}}">
+                {{#if chart}}
+                  <span class="index">{{inc @index}}.</span>
+                {{/if}}
                 <span class="songName {{#if artistalbum}}emphasize{{/if}}">{{TRACK_NAME}}</span>
                 {{#if artistalbum}}
                   <span class="album-name">Album Name - {{artistalbum}}</span>
                 {{/if}}
+                {{#if artistName}}
+                  <span class="album-name">Artist - {{artistName}}</span>
+                {{/if}}
               </div>
-              <div class="text-right">{{trackTime}}</div>
+              {{#if artistName}}
+                <!-- <div class="menu-popup-cont">
+                  <div class="delete-track text-center">&#8286;</div>
+                  <div class="deleteMenu menu-popup">Delete</div>
+                </div> -->
+                <div class="deleteMenu"><i class="fi-minus-circle"></i></div>
+              {{/if}}
+              <div class="text-right trackTime">{{trackTime}}</div>
+              <div class="dragHandle"><i class="fi-list"></i></div>
             </li>
           {{/each}}
         </ul>
       </div>
+      <div id="trackerror"></div>
     {{/if}}
     {{#unless album}}
-      <div class="small-12 medium-12 large-12 cell text-center">
-        There is some error getting the tracks.
-      </div>
+      {{#if errorMessage}}
+        <div class="small-12 medium-12 large-12 cell text-center">
+          {{errorMessage}}
+        </div>
+      {{/if}}
+      {{#unless errorMessage}}
+        <div class="small-12 medium-12 large-12 cell text-center">
+          There is some error getting the tracks.
+        </div>
+      {{/unless}}
     {{/unless}}
+  </div>
+</div>
+
+<div class="addToPlaylistPopup">
+  <div class="cont">
+    <button class="closeAddToPlaylist" type="button">
+      <span aria-hidden="true">×</span>
+    </button>
+    <h3>Add to playlist</h3>
+    <div id="playlistCont">
+      {{> addToPlaylist}}
+    </div>
+    <div id="playListerror"></div>
+  </div>
+</div>
+<div class="playListPopup">
+  <div class="cont">
+    <button class="closebutton" type="button">
+      <span aria-hidden="true">×</span>
+    </button>
+    <div class="createPlaylistInp">
+      <input type="text" placeholder="Playlist name" id="playlistName" />
+    </div>
+    <div class="createbtns">
+      <button id="createBtn" class="button primary">Create</button>
+      <button id="cancelBtn" class="button primary">Cancel</button>
+    </div>
+    <div id="emptyFields" class="hide text-center">This field is required</div>
+    <div id="error"></div>
   </div>
 </div>

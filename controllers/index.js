@@ -16,3 +16,10 @@ exports.error = (req, res) => {
     header: 'Music Amaze'
   });
 }
+
+exports.getDev = (req, res) => {
+  res.render('about/dev.hbs', {
+    title: 'Music Amaze - About',
+    header: 'Music Amaze'
+  });
+}

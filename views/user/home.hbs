@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <meta charset="utf-8">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
@@ -10,18 +11,110 @@
 
 <body>
   {{> header}}
+  <div class="grid-container">
+    <div class="grid-x">
+      <div class="small-offset-1 small-8 medium-offset-1 medium-11 large-offset-1 large-10 cell">
+        <section id="homeTabsCont" class="js-nonSearchView hometabs mtabs">
+          <ul class="homeTabsList clearfix">
+            <li>
+              <a data-tab-category="userHomeTab" class="{{unhighlight}}" href="/user/home">
+                <span class="tabImg"><i class="fi-home"></i></span>
+                <span class="tabName">Home</span>
+              </a>
+            </li>
+            <li>
+              <a data-tab-category="playlistTab" class="{{highlightPlaylistTab}} js-sup" href="/user/playlists/seeAll">
+                <span class="tabImg"><i class="fi-music"></i></span>
+                <span class="tabName">Playlists</span>
+              </a>
+            </li>
+            <li class="{{showRecs}}">
+              <a data-tab-category="recommendTab" class="{{highlightRecomTab}} js-sup" href="#">
+                <span class="tabImg"><i class="fi-heart"></i></span>
+                <span class="tabName">Made for you</span>
+              </a>
+            </li>
+            <!-- <li>
+              <a data-tab-category="topTrendTab" class="{{highlightTopTrendingTab}} js-sup" href="#">
+                <span class="tabImg"><i class="fi-graph-trend"></i></span>
+                <span class="tabName">Top 50</span>
+              </a>
+            </li> -->
+            <li>
+              <a data-tab-category="playedTab" class="{{highlightMostPlayedTab}} js-sup" href="#">
+                <span class="tabImg"><i class="fi-play-circle"></i></span>
+                <span class="tabName">Most Played by you</span>
 
-  <section class="clearfix js-nonSearchView playlist">
+              </a>
+            </li>
+            <li>
+              <a data-tab-category="searchConcertTab" href="/searchconcert">
+                <span class="tabImg"><i class="fi-magnifying-glass"></i></span>
+                <span class="tabName">Search concerts</span>
+              </a>
+            </li>
+            <li>
+              <a href="/payment">
+                <span class="tabImg"><i class="fi-graph-trend"></i></span>
+                <span class="tabName">Stats</span>
+              </a>
+            </li>
+          </ul>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <section id="playlistCont" class="clearfix js-nonSearchView playlist {{showPlayList}}">
     {{> playlist}}
   </section>
-  
-  <section class="clearfix js-nonSearchView topTrend">
+
+  <section id="recommendationsCont" class="clearfix js-nonSearchView js-nonPlaylist homeSection {{showRecom}}">
+    {{> recommendations}}
+  </section>
+
+  <section id="topCharts" class="clearfix js-nonSearchView js-nonPlaylist homeSection {{showCharts}}">
+    <div class="grid-container">
+      <div class="grid-x">
+        <h3 class="">Charts</h3>
+        <ul class="small-12 medium-12 large-12 cell topTrend">
+          <li>
+            <a href="/play/top50" class="top50">
+              <img src="/dist/assets/top.png" alt="Top 50" />
+              <div class="hov"></div>
+              <button class="cover-art-playback"><svg class="icon-play" viewBox="0 0 85 100"><path fill="currentColor" d="M81 44.6c5 3 5 7.8 0 10.8L9 98.7c-5 3-9 .7-9-5V6.3c0-5.7 4-8 9-5l72 43.3z"><title>PLAY</title></path></svg></button>
+            </a>
+          </li>
+          <li>
+            <a href="/play/mostPlayedByAll" class="mostPlayedChart">
+              <img src="/dist/assets/mostPlayed.png" alt="Most Played" />
+              <div class="hov"></div>
+              <button class="cover-art-playback"><svg class="icon-play" viewBox="0 0 85 100"><path fill="currentColor" d="M81 44.6c5 3 5 7.8 0 10.8L9 98.7c-5 3-9 .7-9-5V6.3c0-5.7 4-8 9-5l72 43.3z"><title>PLAY</title></path></svg></button>
+            </a>
+          </li>
+          <li>
+            <a href="/play/mostLikedByAll" class="mostLikedChart">
+              <img src="/dist/assets/mostLiked.jpg" alt="Most Liked" />
+              <div class="hov"></div>
+              <button class="cover-art-playback"><svg class="icon-play" viewBox="0 0 85 100"><path fill="currentColor" d="M81 44.6c5 3 5 7.8 0 10.8L9 98.7c-5 3-9 .7-9-5V6.3c0-5.7 4-8 9-5l72 43.3z"><title>PLAY</title></path></svg></button>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- <section id="topTrendCont" class="clearfix js-nonSearchView js-nonPlaylist topTrend">
     {{> topTrending}}
+  </section> -->
+
+  <section id="mostPlayedCont" class="clearfix js-nonSearchView js-nonPlaylist homeSection {{showMPlayed}}">
+    {{> mostPlayed}}
   </section>
 
   <section id="searchCont" class="hide js-searchView clearfix">
   </section>
-  <div class="bodyBg"></div>
+  <div class="bodyBg bodyBgPlay"></div>
 </body>
 
 {{> scripts}}

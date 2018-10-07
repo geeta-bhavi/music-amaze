@@ -1,0 +1,41 @@
+<div class="grid-container">
+  <div class="grid-x">
+    <div class="small-12 medium-12 large-12 cell artistRes">
+      {{#if artists}}
+        <button class="button primary artistHd js-chooseartist">
+          Choose an artist
+          <span class="chooseIcon"></span>
+        </button>
+      {{/if}}
+      <div class="artistList">
+        <ul class="concert-artists js-artists">
+          {{#each artists}}
+            <li>
+              <a id="{{id}}" href="#">
+                <span class="artistName">{{displayName}}</span>
+              </a>
+            </li>
+          {{/each}}
+        </ul>
+    </div>
+
+      {{#if locations}}
+        <button class="button primary artistHd js-chooseLocation">
+          Choose a location
+          <span class="chooseIcon"></span>
+        </button>
+      {{/if}}
+      <div class="locationList">
+        <ul class="concert-artists js-locations">
+          {{#each locations}}
+            <li>
+              <a id="{{metroArea.id}}" href="#">
+                <span class="artistName">{{city.displayName}}, {{city.country.displayName}}</span>
+              </a>
+            </li>
+          {{/each}}
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

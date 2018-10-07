@@ -1,6 +1,8 @@
 <div class="grid-container">
   <div class="grid-x">
-    <h3>Top 10</h3>
+    <h3 class="{{showTopTrending}}">Top {{trendingCount}}
+      <span class="text-small"><a href="/play/top50"> Play all <i class="fi-play-circle"></i></a></span>
+    </h3>
     <ul class="small-12 medium-12 large-12 cell topTrend">
       {{#each topTrendingTracks}}
         <li id="{{TRACK_ID}}">

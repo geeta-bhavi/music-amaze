@@ -12,6 +12,48 @@
 <body class="clearfix">
   {{> header}}
 
+  <div class="grid-container">
+    <div class="grid-x">
+      <div class="small-offset-1 small-8 medium-offset-1 medium-11 large-offset-2 large-10 cell">
+        <section id="homeTabsCont" class="js-nonSearchView hometabs mtabs">
+          <ul class="homeTabsList clearfix">
+            <li>
+              <a data-tab-category="userHomeTab" class="{{unhighlight}}" href="/user/home">
+                <span class="tabImg"><i class="fi-home"></i></span>
+                <span class="tabName">Home</span>
+              </a>
+            </li>
+            <li>
+              <a data-tab-category="playlistTab" class="{{highlightPlaylistTab}}" href="/user/playlists/seeAll">
+                <span class="tabImg"><i class="fi-music"></i></span>
+                <span class="tabName">Playlists</span>
+              </a>
+            </li>
+            <li>
+              <a data-tab-category="playedTab" class="{{highlightMostPlayedTab}}" href="/user/mostPlayed/seeAll">
+                <span class="tabImg"><i class="fi-play-circle"></i></span>
+                <span class="tabName">Most Played by you</span>
+
+              </a>
+            </li>
+            <li>
+              <a data-tab-category="searchConcertTab" href="/searchconcert">
+                <span class="tabImg"><i class="fi-magnifying-glass"></i></span>
+                <span class="tabName">Search concerts</span>
+              </a>
+            </li>
+            <li>
+              <a href="/payment">
+                <span class="tabImg"><i class="fi-graph-trend"></i></span>
+                <span class="tabName">Stats</span>
+              </a>
+            </li>
+          </ul>
+        </section>
+      </div>
+    </div>
+  </div>
+
 
   <section class="hw-accelerate">
     {{> listTracks}}
@@ -19,8 +61,7 @@
 
 
 
-<div class="bodyBg"></div>
+<div class="bodyBg bodyBgPlay"></div>
 </body>
 {{> scripts}}
-
 </html>

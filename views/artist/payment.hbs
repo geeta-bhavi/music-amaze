@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, minimum-scale=1, maximum-scale=1">
+  <title>{{title}}</title>
+  {{> styles}}
+</head>
+
+<body class="stat clearfix">
+  {{> header}}
+
+  <section>
+    <div class="grid-container">
+      <div class="grid-x">
+        <div class="small-12 medium-offset-3 medium-6 large-offset-3 large-6 cell">
+          <h3 class="payHd">PAYMENT INFO</h3>
+          <div id="payment">
+            <form id="pay">
+              <div>
+                <div class="">
+                  <label>Creditcard number
+                    <input type="number" placeholder="" id="creditnumber" maxlength="16" />
+                  </label>
+                </div>
+                <div class="">
+                  <label>Expiration
+                    <input type="number" id="expiration" placeholder="" maxlength="4" />
+                  </label>
+                </div>
+
+                <div class="">
+                  <label>CVV code
+                    <input type="number" id="cvv" placeholder="" maxlength="3" />
+                  </label>
+                </div>
+              </div>
+              <div class="payInfo">
+                <div class="amount">
+                  <span>$ 99</span>
+                  <span class="cents">99</span>
+                  <span class="duration">Year</span>
+                </div>
+              </div>
+
+              <div id="paySub">
+                <input type="submit" value="Pay" class="button primary" />
+              </div>
+
+            </form>
+
+            <div id="emptyFields" class="hide text-center">This field is required</div>
+            <div id="error"></div>
+
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+
+  <div class="bodyForm"></div>
+</body>
+
+{{> scripts}}
+
+</html>

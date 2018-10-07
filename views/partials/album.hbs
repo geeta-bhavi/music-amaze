@@ -1,0 +1,17 @@
+<div class="grid-container">
+  <div class="grid-x">
+    <div class="small-12 medium-12 large-12 cell artistRes">
+      <button class="button primary artistHd">Choose an album</button>
+
+      <ul class="stat-albums">
+        {{#each albums}}
+          <li>
+            <a id="{{ALBUM_ID}}" href="#">
+              <span class="artistName">{{ALBUM_NAME}}</span>
+            </a>
+          </li>
+        {{/each}}
+      </ul>
+    </div>
+  </div>
+</div>

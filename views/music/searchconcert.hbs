@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, minimum-scale=1, maximum-scale=1">
+  <title>{{title}}</title>
+  {{> styles}}
+</head>
+
+<body class="concert clearfix">
+  {{> header}}
+
+  <div class="grid-container">
+    <div class="grid-x">
+      <div class="small-offset-1 small-8 medium-offset-1 medium-11 large-offset-2 large-10 cell">
+        <section id="homeTabsCont" class="js-nonSearchView hometabs mtabs">
+          <ul class="homeTabsList clearfix">
+            <li>
+              <a data-tab-category="userHomeTab" class="{{unhighlight}}" href="/user/home">
+                <span class="tabImg"><i class="fi-home"></i></span>
+                <span class="tabName">Home</span>
+              </a>
+            </li>
+            <li>
+              <a data-tab-category="playlistTab" class="{{highlightPlaylistTab}}" href="/user/playlists/seeAll">
+                <span class="tabImg"><i class="fi-music"></i></span>
+                <span class="tabName">Playlists</span>
+              </a>
+            </li>
+            <li>
+              <a data-tab-category="playedTab" class="{{highlightMostPlayedTab}}" href="/user/mostPlayed/seeAll">
+                <span class="tabImg"><i class="fi-play-circle"></i></span>
+                <span class="tabName">Most Played by you</span>
+
+              </a>
+            </li>
+            <li>
+              <a data-tab-category="searchConcertTab" class="active" href="/searchconcert">
+                <span class="tabImg"><i class="fi-magnifying-glass"></i></span>
+                <span class="tabName">Search concerts</span>
+              </a>
+            </li>
+            <li>
+              <a href="/payment">
+                <span class="tabImg"><i class="fi-graph-trend"></i></span>
+                <span class="tabName">Stats</span>
+              </a>
+            </li>
+          </ul>
+        </section>
+      </div>
+    </div>
+  </div>
+
+
+  <section>
+    <div class="grid-container">
+      <div class="grid-x">
+        <div class="small-12 medium-12 large-12 cell concertSearch">
+          <div id="search-concert" class="box-search">
+              <div class="box-input">
+                <input type="text" id="concert-text" placeholder="Find concerts for any artist or any location" autocomplete="off" class="search-input js-search-input" value="">
+                <a class="box-search-icon js-concert-search" href="#"><i class="fi-magnifying-glass"></i></a>
+              </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+<section>
+  <div id="concert-results">
+  </div>
+</section>
+
+<div class="apiloadingScreen"><!-- Place at bottom of page --></div>
+<div class="bodyBgConcert"></div>
+</body>
+
+{{> scripts}}
+</html>
